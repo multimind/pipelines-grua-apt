@@ -11,6 +11,7 @@ import pytz
 import cv2
 import logging
 from PIL import Image,ImageDraw,ImageStat
+import sys
 
 def limpiar(dir,ult_file):
     for file in os.listdir(dir):
@@ -33,8 +34,8 @@ def procesar(config):
 
     indice=1
 
-    #vidcap = cv2.VideoCapture(url,cv2.CAP_FFMPEG)
-    vidcap = cv2.VideoCapture(url)
+    vidcap = cv2.VideoCapture(url,cv2.CAP_FFMPEG)
+    #vidcap = cv2.VideoCapture(url)
 
     if (vidcap.isOpened() == False):
         print("no se puede abrir archivo: "+url)
@@ -72,7 +73,7 @@ def procesar(config):
                     if vidcap.isOpened():
                         break
                     else:
-                        time.sleep(2*60)
+                        time.sleep(5)
                 continue
 
             cv2.imwrite(ruta_captura,frame)
