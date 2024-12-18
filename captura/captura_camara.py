@@ -78,7 +78,7 @@ def procesar(config):
             except Exception as e:
                 logging.exception("Error en Factory Stream mp4")
                 print(e)
-                time.sleeptiempo_espera_error)
+                time.sleeptiempo_espera_error
 
 def signal_handler(key, frame):
 	print("\n[*] Saliendo\n")
