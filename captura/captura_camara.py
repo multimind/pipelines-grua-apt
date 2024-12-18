@@ -5,7 +5,10 @@ from datetime import datetime
 from requests.auth import HTTPDigestAuth
 from concurrent.futures import ThreadPoolExecutor
 import argparse
-
+import signal
+import configparser
+import pytz
+import cv2
 
 def limpiar(dir,ult_file):
     for file in os.listdir(dir):
@@ -15,7 +18,7 @@ def limpiar(dir,ult_file):
 
 def procesar(config):
     
-    nombre_camara = config["CAMARA"]["nombre"]
+  
     username = config["CAMARA"]["username"]
     password = config["CAMARA"]["password"]
     url = config["CAMARA"]["url"]
@@ -23,6 +26,7 @@ def procesar(config):
     ruta_base_descarga=config["CAPTURA"]["ruta_base_descarga"]
     frameskip=config["CAPTURA"]["frameskip"]
     tiempo_espera_error=config["CAPTURA"]["tiempo_espera_error"]
+    nombre_camara = config["CAPTURA"]["nombre_camara"]
     
     hora_america=pytz.timezone('America/Lima')
 
