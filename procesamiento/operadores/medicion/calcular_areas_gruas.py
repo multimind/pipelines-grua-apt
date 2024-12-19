@@ -6,6 +6,7 @@ import shapely.affinity
 from shapely.geometry import Point
 import cv2
 import numpy as np
+import math
 
 def calcular(clase, variables_globales,delta_x=100,delta_y=50):
 
