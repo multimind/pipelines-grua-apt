@@ -33,9 +33,8 @@ class FactoryStreamRtsp:
         self.errores=0
         self.descarga_fallida=0
 
-        ruta_camara=ruta_base_descarga+"/"+nombre_camara
+        ruta_camara=ruta_base_descarga
         
-
         if not os.path.exists(ruta_camara):
             os.mkdir(ruta_camara)
 
@@ -71,7 +70,7 @@ class FactoryStreamRtsp:
 
         hora_america=pytz.timezone('America/Lima')
 
-        indice=1
+ 
 
         vidcap = cv2.VideoCapture(self.url_rtsp,cv2.CAP_FFMPEG)
 
@@ -89,9 +88,9 @@ class FactoryStreamRtsp:
                 
                 indice=indice+1
 
-                nombre_imagen=texto_fecha+'-'+texto_hora+"-"+self.nombre_camara+"-"+str(indice)+".jpg"
+                nombre_imagen=texto_fecha+'-'+texto_hora+"-"+self.nombre_camara+".jpg"
 
-                ruta_captura=self.ruta_base_descarga+"/"+self.nombre_camara+"/"+nombre_imagen
+                ruta_captura=self.ruta_base_descarga+"/"+nombre_imagen
 
                 ret, frame = vidcap.read()
 
@@ -124,7 +123,7 @@ class FactoryStreamRtsp:
 
                 json_datos = {
                         "nombre_imagen": nombre_imagen, # la ruta base sale desde inferencia
-                        "ruta_base":self.ruta_base_descarga+"/"+self.nombre_camara,
+                        "ruta_base":self.ruta_base_descarga,
                         "datetime":datetime_actual,
                         "fecha":texto_fecha,
                         "hora":texto_hora,
