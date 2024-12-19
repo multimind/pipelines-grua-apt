@@ -14,7 +14,7 @@ def alerta_imagen(variables_globales,url, chat,ruta_pintados):
                 try:
                     json = datos
 
-                    if(variables_globales["alerta"]=="si"):
+                    if(variables_globales["alerta"]=="si" and variables_globales["cantidad_alertas"]==1):
 
                         print("enviando alerta")
 
