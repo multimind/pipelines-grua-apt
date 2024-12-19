@@ -7,26 +7,24 @@ from shapely.geometry import Point
 import cv2
 import numpy as np
 from PIL import ImageDraw, Image
+import os
 
-def guardar( variables_globales,ruta_raros):
+def limpiar( variables_globales,ruta_pintados):
 
     def _principal(source):
 
         def subscribe(observer, scheduler = None):
 
-            def on_next(datos):
+            def on_next(json):
 
                 try:
-                    json = datos
-                
-                    if 'caso_raro_estructuras' in variables_globales:
-                        nombre_imagen=json["nombre_imagen"]
-                        ruta_base=json["ruta_base"]
-                        
-                        img = Image.open(ruta_base + '/' +nombre_imagen)
-                        img.save(ruta_raros+"/"+nombre_imagen)
-                        del variables_globales['caso_raro_estructuras']
-                        
+                    os.remove(json["ruta_base"]+"/"+json["nombre_imagen"])
+                 
+                    if(variables_globales["alerta"]=="si"):
+                        pass
+                    else:
+                        os.remove(ruta_pintados + "/" + json["nombre_imagen"])
+       
                 except Exception as err:
                     print(err)
                     logging.error("Exception occurred", exc_info=True)
