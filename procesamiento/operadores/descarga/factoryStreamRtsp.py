@@ -132,11 +132,6 @@ class FactoryStreamRtsp:
 
                 observer.on_next(json_datos)
 
-                try: 
-                    os.remove(ruta_captura)
-                except:
-                    pass
-
             except Exception as e:
                 logging.exception("Error en Factory Stream mp4")
                 #logging.error(e)
