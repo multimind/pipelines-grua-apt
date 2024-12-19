@@ -37,7 +37,13 @@ def inferir_imagen(nombre_imagen, model):
             class_id = box[-1]
             res = str(classes.get(int(class_id)))+':'+str(int(box[0]))+","+str(int(box[1]))+","+str(int(box[2]))+","+str(int(box[3]))
 
-            respuesta.append(res)
+            confidence = box[4]
+
+            if confidence>0.8:
+                respuesta.append(res)
+
+        if respuesta==[]:
+            return [False,respuesta]
 
         return [True, respuesta]
 
