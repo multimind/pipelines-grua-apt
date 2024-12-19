@@ -66,7 +66,7 @@ def procesar(config):
         calcular_areas_gruas.calcular("estructura_imanes",variables_globales,200,400),
         trabajador_en_zona_grua.detectar(variables_globales),
         pintar_grua_apt.pintar(variables_globales,config["DESCARGA"]["pintados"]),
-    #    operador_generar_alerta.alerta_imagen(variables_globales,config["TELEGRAM"]["url"],config["TELEGRAM"]["chat_id"]),
+        operador_generar_alerta.alerta_imagen(variables_globales,config["TELEGRAM"]["url"],config["TELEGRAM"]["chat_id"],config["DESCARGA"]["pintados"]),
         guardar_raros.guardar(variables_globales,config["DESCARGA"]["raros"])
     )
 

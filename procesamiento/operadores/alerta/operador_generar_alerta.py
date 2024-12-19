@@ -3,7 +3,7 @@ import logging
 import requests
 import os
 
-def alerta_imagen(variables_globales,url, chat):
+def alerta_imagen(variables_globales,url, chat,ruta_pintados):
 
     def _principal(source):
 
@@ -16,7 +16,9 @@ def alerta_imagen(variables_globales,url, chat):
 
                     if(variables_globales["alerta"]=="si"):
 
-                        imagen_a_enviar = json["ruta_base"] +'/' + json["nombre_imagen"]
+                        print("enviando alerta")
+
+                        imagen_a_enviar = ruta_pintados +'/' + json["nombre_imagen"]
                         
                         canal = chat
 
@@ -30,6 +32,8 @@ def alerta_imagen(variables_globales,url, chat):
                         values={'upload_file' : imagen_a_enviar, 'mimetype':'image/jpg','caption':mensaje }
 
                         response = requests.post(url_,files=files,data=values)
+                        print("response")
+                        print(response)
                         archivo.close()
 
                 except Exception as err:
