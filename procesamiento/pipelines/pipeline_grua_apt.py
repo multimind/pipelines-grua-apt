@@ -45,7 +45,7 @@ def procesar(config):
         factory_camara= factoryStreamRtsp.FactoryStreamRtsp(nombre_camara,
             config["CAMARA"]["url"],
             config["DESCARGA"]["ruta_descarga"], 
-            config.getint("CAMARA","frameskip")
+            config.getint("CAMARA","frameskip"))
     elif config["STREAM"]["tipo"]=="mp4":
         factory_camara= factoryStreamMp4.FactoryStreamMp4(nombre_camara,
             config["VIDEO"]["ruta_video"],
