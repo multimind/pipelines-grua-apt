@@ -70,7 +70,7 @@ class FactoryStreamRtsp:
 
         hora_america=pytz.timezone('America/Lima')
 
- 
+        print("url rtsp")
 
         vidcap = cv2.VideoCapture(self.url_rtsp,cv2.CAP_FFMPEG)
 
@@ -86,8 +86,6 @@ class FactoryStreamRtsp:
                 texto_fecha=datetime_actual.strftime('%Y_%m_%d')
                 texto_hora=datetime_actual.strftime('%H_%M_%S_%f')
                 
-                indice=indice+1
-
                 nombre_imagen=texto_fecha+'-'+texto_hora+"-"+self.nombre_camara+".jpg"
 
                 ruta_captura=self.ruta_base_descarga+"/"+nombre_imagen
@@ -142,7 +140,7 @@ class FactoryStreamRtsp:
             except Exception as e:
                 logging.exception("Error en Factory Stream mp4")
                 #logging.error(e)
-                print("???")
+                
                 print(e)
                 self.escribir_error("","","")
                 time.sleep(self.tiempo_espera_error)
