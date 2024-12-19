@@ -18,11 +18,11 @@ def limpiar( variables_globales,ruta_pintados):
             def on_next(json):
 
                 try:
-                    os.remove(json["ruta_base"]+"/"+json["nombre_imagen"])
                  
                     if(variables_globales["alerta"]=="si"):
                         pass
                     else:
+                        os.remove(json["ruta_base"]+"/"+json["nombre_imagen"])
                         os.remove(ruta_pintados + "/" + json["nombre_imagen"])
        
                 except Exception as err:
