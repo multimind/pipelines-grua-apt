@@ -39,7 +39,7 @@ def calcular(clase, variables_globales,delta_x=100,delta_y=50):
                     estructura_seleccionada=None
 
                     if cantidad_estructuras==1:
-                        estructura_seleccionada=estructura[0]
+                        estructura_seleccionada=estructuras[0]
                     else:
 
                         minima=100000
