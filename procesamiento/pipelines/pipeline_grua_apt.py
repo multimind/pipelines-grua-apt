@@ -63,7 +63,7 @@ def procesar(config):
 
     compuesto=stream.pipe(
         socket_red_neuronal.procesarImagen(config["RED_DETECCION_GRUA"]["ip"],int(config["RED_DETECCION_GRUA"]["puerto"]),"detecciones",None, "detectron2"),
-        calcular_areas_gruas.calcular("estructura_imanes",variables_globales,200,400),
+        calcular_areas_gruas.calcular("estructura_imanes",variables_globales,config["GRUA"]["delta_x"],config["GRUA"]["delta_y"]),
         trabajador_en_zona_grua.detectar(variables_globales),
         pintar_grua_apt.pintar(variables_globales,config["DESCARGA"]["pintados"]),
         operador_generar_alerta.alerta_imagen(variables_globales,config["TELEGRAM"]["url"],config["TELEGRAM"]["chat_id"],config["DESCARGA"]["pintados"]),
