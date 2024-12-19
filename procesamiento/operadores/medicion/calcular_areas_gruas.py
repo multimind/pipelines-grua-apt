@@ -35,6 +35,7 @@ def calcular(clase, variables_globales,delta_x=100,delta_y=50):
                         if not clase_deteccion in clase:
                             continue
                         cantidad_estructuras=cantidad_estructuras+1
+                        deteccion["seleccionada"]="no"
                         estructuras.append(deteccion)
 
                     estructura_seleccionada=None
@@ -46,6 +47,7 @@ def calcular(clase, variables_globales,delta_x=100,delta_y=50):
                         minima=100000
                     
                         for estructura in estructuras:
+
                             x1=int(deteccion["x1"])
                             x2=int(deteccion["x2"])
                             y1=int(deteccion["y1"])
@@ -63,7 +65,7 @@ def calcular(clase, variables_globales,delta_x=100,delta_y=50):
                                 estructura_seleccionada=estructura
 
                     if not estructura_seleccionada==None:
-
+                        estructura_seleccionada["seleccionada"]="si"
                         x1=int(estructura_seleccionada["x1"])
                         x2=int(estructura_seleccionada["x2"])
                         y1=int(estructura_seleccionada["y1"])

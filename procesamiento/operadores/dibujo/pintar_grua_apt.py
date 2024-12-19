@@ -39,16 +39,20 @@ def pintar( variables_globales,ruta_pintada):
 
                         if clase=="estructura_imanes":
                             outline="blue"
+                            if deteccion["seleccionada"]=="si":
+                                draw.rectangle((x1,y1,x2,y2), outline = outline ,width=5)
+
                         elif clase=="cono":
                             outline="orange"
+                            draw.rectangle((x1,y1,x2,y2), outline = outline ,width=5)
                         elif clase=="trabajador":
                             if deteccion["seguro"]=="si":
                                 outline="green"
                             elif deteccion["seguro"]=="no":
                                 outline="red"
+                            draw.rectangle((x1,y1,x2,y2), outline = outline ,width=5)
 
-                        draw.rectangle((x1,y1,x2,y2), outline = outline ,width=5)
-
+                        
                     print(".....")
 
                     if "area_seguridad_roja" in variables_globales:
