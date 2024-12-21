@@ -17,6 +17,7 @@ def calcular(clase, variables_globales,delta_x=100,delta_y=50):
             def on_next(datos):
 
                 try:
+                    print("estoy aca????!!")
                     json = datos
                     ancho=json["ancho"]
                     alto=json["alto"]
