@@ -59,7 +59,10 @@ def callback(ch, method, properties, body):
 
     url_frame=body.decode()
 
-    inferir_imagen(url_frame, model)
+    if not os.path.isfile(url_frame):
+        print("archivo no existe: "+url_frame)
+    else:
+        inferir_imagen(url_frame, model)
  
 def procesar(config):
     global model
