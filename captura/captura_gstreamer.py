@@ -33,16 +33,25 @@ def on_new_sample(sink):
         format_ = structure.get_string("format")
         print(f"Detected format: {format_}")
 
-        #width = caps.get_structure(0).get_int("width")[1]
-        #height = caps.get_structure(0).get_int("height")[1]
-
-        width=1920
-        height=1080
-
+        width = structure.get_int("width")[1]
+        height = structure.get_int("height")[1]
+        
+        if format_ != "RGB":
+            print("Unsupported format. Adjust GStreamer pipeline to output RGB.")
+            return Gst.FlowReturn.OK
+ 
         print(width)
         print(height)
 
-        data = np.frombuffer(map_info.data, np.uint8).reshape((height, width, 3))
+        bpp = 3  # Bytes per pixel for RGB
+        expected_size = width * height * bpp
+        actual_size = len(map_info.data)
+
+        if actual_size != expected_size:
+            print(f"Warning: Buffer size mismatch (expected {expected_size}, got {actual_size})")
+            return Gst.FlowReturn.OK
+
+        data = np.frombuffer(map_info.data, np.uint8).reshape((height, width, bpp))
 
         # Save the image using PIL (optional)
         image = Image.fromarray(data, "RGB")
