@@ -78,7 +78,7 @@ class FactoryStreamPullCarpeta:
                         "factor_riesgo":"no"
                     }
                     print("aca???")
-                    print(json)_datos
+                    print(json_datos)
                     observer.on_next(json_datos)
                     print("sigo")
 
