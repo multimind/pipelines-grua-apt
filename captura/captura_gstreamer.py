@@ -1,9 +1,10 @@
-import time
 import gi
+
+gi.require_version('Gst', '1.0')
+import time
 from gi.repository import Gst, GObject
 from datetime import datetime
 
-gi.require_version('Gst', '1.0')
 
 # Initialize GStreamer
 Gst.init(None)
