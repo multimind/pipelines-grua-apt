@@ -60,7 +60,7 @@ def main():
 
     # Create the pipeline
     pipeline = Gst.parse_launch(
-        "rtspsrc location=rtsp://192.168.1.102:554/Streaming/Channels/101 user-id=admin user-pw=Hik13579 protocols=tcp ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=sink"
+        "rtspsrc location=rtsp://192.168.1.102:554/Streaming/Channels/101 user-id=admin user-pw=Hik13579 protocols=tcp ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! video/x-raw,format=RGB ! appsink name=sink"
     )
 
     # Get the appsink element
