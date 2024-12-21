@@ -31,6 +31,10 @@ def on_new_sample(sink):
         caps = sample.get_caps()
         width = caps.get_structure(0).get_int("width")[1]
         height = caps.get_structure(0).get_int("height")[1]
+
+        print(width)
+        print(height)
+
         data = np.frombuffer(map_info.data, np.uint8).reshape((height, width, 3))
 
         # Save the image using PIL (optional)
@@ -49,7 +53,7 @@ def main():
 
     # Create the pipeline
     pipeline = Gst.parse_launch(
-        "rtspsrc location=rtsp://192.168.1.102:554/Streaming/Channels/101 user-id=admin user-pw=Hik13579 ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=sink"
+        "rtspsrc location=rtsp://192.168.1.102:554/Streaming/Channels/102 user-id=admin user-pw=Hik13579 ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=sink"
     )
 
     # Get the appsink element
