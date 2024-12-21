@@ -12,7 +12,7 @@ import torch
 import logging
 import argparse
 
-global model
+model=None
 
 def log_setup(path, level):
 
