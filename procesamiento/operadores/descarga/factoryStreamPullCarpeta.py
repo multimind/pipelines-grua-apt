@@ -55,12 +55,12 @@ class FactoryStreamPullCarpeta:
                 archivos = sorted(archivos)
 
                 for archivo in archivos:
-                    original=archivo
+                    
                     print("procesando"+archivo)
 
-                    archivo=archivo.rstrip(".jpg")
+                    solo_nombre=archivo.rstrip(".jpg")
 
-                    parts = archivo.split('_')
+                    parts = solo_nombre.split('_')
 
                     timestamp_entero=int(parts[0])
                     timestamp_fraccion=int(parts[1])

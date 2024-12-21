@@ -55,7 +55,7 @@ def procesarImagen(servidor,puerto,tag_detecciones,fabrica=None,nombre_red="pixe
                     sock.connect(server_address)
 
                     arreglo_imagen=[str(ruta_imagen)]
-
+                    print("aca???")
                     message = pickle.dumps(arreglo_imagen)
                     sock.sendall(message)
                     data = sock.recv(4096)
