@@ -10,6 +10,7 @@ from gi.repository import Gst, GLib
 from PIL import Image
 import time
 from datetime import datetime
+import os
 
 def on_new_sample(sink):
     sample = sink.emit("pull-sample")
