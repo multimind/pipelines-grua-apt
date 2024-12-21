@@ -57,7 +57,7 @@ def procesar(config):
             config["DESCARGA"]["ruta_descarga"])
     elif config["STREAM"]["tipo"]=="pull_carpeta":
         factory_camara= factoryStreamCarpeta.FactoryStreamPullCarpeta(nombre_camara,
-            config["DESCARGA"]["ruta_descarga"])
+            config["PULL_CARPETA"]["ruta_carpeta"])
 
     stream=factory_camara.crear_stream()
 
