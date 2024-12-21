@@ -3,9 +3,10 @@ import gi
 gi.require_version('Gst', '1.0')
 gi.require_version('GLib', '2.0')
 
+from gi.repository import Gst, GLib
+
 from PIL import Image
 import time
-from gi.repository import Gst, GObject
 from datetime import datetime
 
 def on_new_sample(sink):
