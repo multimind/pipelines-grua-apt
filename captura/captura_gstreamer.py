@@ -40,8 +40,6 @@ def on_new_sample(sink):
             print("Unsupported format. Adjust GStreamer pipeline to output RGB.")
             return Gst.FlowReturn.OK
  
-        print(width)
-        print(height)
 
         bpp = 3  # Bytes per pixel for RGB
         expected_size = width * height * bpp
@@ -61,10 +59,9 @@ def on_new_sample(sink):
         integer_part = int(timestamp)
         fractional_part = int((timestamp - integer_part) * 1_000_000)
 
-        nombre_captura=integer_part+"_"+fractional_part
+        nombre_captura=str(integer_part)+"_"+str(fractional_part)
 
         image.save("frames/"+nombre_captura+".jpg")
-        print("Frame saved as frame.jpg")
 
     finally:
         buffer.unmap(map_info)
@@ -72,6 +69,7 @@ def on_new_sample(sink):
     return Gst.FlowReturn.OK
 
 def main():
+    os.makedirs("frames", exist_ok=True)
     # Initialize GStreamer
     Gst.init(None)
 
