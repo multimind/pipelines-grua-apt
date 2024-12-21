@@ -58,7 +58,7 @@ def callback(ch, method, properties, body):
 
     url_frame=body.decode()
 
-    inferir_imagen(url_frame, model):
+    inferir_imagen(url_frame, model)
  
 def procesar(config):
 
