@@ -55,6 +55,8 @@ class FactoryStreamPullCarpeta:
 
                 for archivo in archivos:
 
+                    archivo=archivo.rstrip(".jpg")
+
                     parts = archivo.split('_')
 
                     timestamp_entero=int(parts[0])
