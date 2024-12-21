@@ -54,6 +54,7 @@ def inferir_imagen(nombre_imagen, model):
 
 # Callback for handling messages
 def callback(ch, method, properties, body):
+    global model
     print(f"Received: {body.decode()}")
 
     url_frame=body.decode()
