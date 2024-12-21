@@ -75,7 +75,9 @@ def on_new_sample(sink,user_data):
         nombre_final="frames/"+nombre_captura+".jpg"
         image.save(nombre_final)
 
-        channel.basic_publish(exchange='', routing_key='grua_apt', body=nombre_final)
+        ruta_frames="/data/pipelines-grua-apt/captura/"
+
+        channel.basic_publish(exchange='', routing_key='grua_apt', body=ruta_frames+nombre_final)
         
     finally:
         buffer.unmap(map_info)

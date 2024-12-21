@@ -12,6 +12,8 @@ import torch
 import logging
 import argparse
 
+global model
+
 def log_setup(path, level):
 
     if not os.path.isdir("logs/grua/"):
@@ -53,9 +55,15 @@ def inferir_imagen(nombre_imagen, model):
 # Callback for handling messages
 def callback(ch, method, properties, body):
     print(f"Received: {body.decode()}")
+
+    url_frame=body.decode()
+
+    inferir_imagen(url_frame, model):
  
 def procesar(config):
 
+    model = YOLO(config.get("PESOS","ruta"))
+    
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
 
@@ -65,75 +73,6 @@ def procesar(config):
 
     channel.start_consuming()
 
-
-
-# # Consume messages from the queue
-# channel.basic_consume(queue='test_queue', on_message_callback=callback)
-
-# # Start consuming
-# channel.start_consuming()
-    
-#     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    
-#     server_address = ('localhost', config.getint("PUERTO","puerto"))
-    
-#     mensaje = 'Iniciando servicio en {} el puerto {}'.format(*server_address)
-#     logging.info(mensaje)
-
-#     sock.bind(server_address)
-#     sock.listen(1)
-
-#     model = YOLO(config.get("PESOS","ruta"))
-    
-#     mensaje = "Pesos de Red Cargados en Memoria"
-#     logging.info(mensaje)
-
-#     while True:
-#         mensaje = 'Esperando Conexion'
-#         print(mensaje)
-#         logging.info(mensaje)
-#         connection, client_address = sock.accept()
-#         try:
-#             mensaje = 'Conexion entrante desde: {} '.format(client_address)
-#             logging.info(mensaje)
-            
-#             while True:
-#                 data = connection.recv(4096)
-
-#                 if data:
-#                     try:
-#                         data_recibida = pickle.loads(data)
-#                         ruta_de_imagen = data_recibida[0]
-
-#                         mensaje = "Datos recibidos: {}".format(data_recibida[0])
-#                         logging.info(mensaje)
-#                     except Exception as e:
-#                         mensaje = "{} {}".format(e, e.args)
-
-#                     try:
-#                         solo_nombre=os.path.basename(ruta_de_imagen)
-#                         resultado, respuesta = inferir_imagen(ruta_de_imagen, model)
-
-#                         print(respuesta)
-
-#                         if(len(respuesta) == 0):
-#                             respuesta=['imagen:'+str(solo_nombre)]+['nada:_']
-#                         else:
-#                             respuesta=['imagen:'+str(solo_nombre)]+respuesta
-
-#                         logging.info("Enviando Respuesta: {}".format(respuesta))
-#                         connection.sendall(pickle.dumps(respuesta))
-#                     except Exception as e:
-#                         logging.critical("{} {}".format(e,e.args))
-
-#                 else:
-#                     mensaje = 'No hay mas datos de {} '.format(client_address)
-#                     logging.info(mensaje)
-#                     break
-
-#         finally:
-#             connection.close()
 
 if __name__ == "__main__":
 
