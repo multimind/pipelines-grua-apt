@@ -55,7 +55,15 @@ def on_new_sample(sink):
 
         # Save the image using PIL (optional)
         image = Image.fromarray(data, "RGB")
-        image.save("frame.jpg")
+
+        timestamp = time.time()
+
+        integer_part = int(timestamp)
+        fractional_part = int((timestamp - integer_part) * 1_000_000)
+
+        nombre_captura=integer_part+"_"+fractional_part
+
+        image.save(nombre_captura+".jpg")
         print("Frame saved as frame.jpg")
 
     finally:
