@@ -29,8 +29,11 @@ def on_new_sample(sink):
     try:
         # Example assumes video is in RGB format
         caps = sample.get_caps()
-        width = caps.get_structure(0).get_int("width")[1]
-        height = caps.get_structure(0).get_int("height")[1]
+        #width = caps.get_structure(0).get_int("width")[1]
+        #height = caps.get_structure(0).get_int("height")[1]
+
+        width=1920
+        height=1080
 
         print(width)
         print(height)
