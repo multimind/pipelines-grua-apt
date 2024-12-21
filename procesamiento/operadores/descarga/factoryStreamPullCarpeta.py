@@ -47,7 +47,7 @@ class FactoryStreamPullCarpeta:
 
                 archivos = os.listdir(self.ruta_carpeta)
                 
-                if len(archivos==0):
+                if len(archivos)==0:
                     time.sleep(0.1)
                     continue
 
@@ -82,8 +82,7 @@ class FactoryStreamPullCarpeta:
                 
                 print(e)
                 self.escribir_error("","","")
-                time.sleep(self.tiempo_espera_error)
-
+             
                 self.errores=self.errores+1
 
                 with open(self.ruta_carpeta+"/"+self.nombre_camara+"/status/metricas",'w') as f:
