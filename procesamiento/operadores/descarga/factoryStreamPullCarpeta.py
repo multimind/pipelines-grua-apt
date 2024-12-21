@@ -23,11 +23,6 @@ class FactoryStreamPullCarpeta:
         self.errores=0
         self.descarga_fallida=0
 
-        ruta_camara=ruta_base_descarga
-        
-        if not os.path.exists(ruta_camara):
-            os.mkdir(ruta_camara)
-
     def crear_stream(self):
         self.stream= create(self.leer_datos)
         return self.stream
@@ -91,7 +86,7 @@ class FactoryStreamPullCarpeta:
 
                 self.errores=self.errores+1
 
-                with open(self.ruta_base_descarga+"/"+self.nombre_camara+"/status/metricas",'w') as f:
+                with open(self.ruta_carpeta+"/"+self.nombre_camara+"/status/metricas",'w') as f:
                     f.write(self.nombre_camara+".exepciones "+str(self.errores)+"\n")
                     f.write(self.nombre_camara+".descarga_fallida "+str(self.descarga_fallida))
 
