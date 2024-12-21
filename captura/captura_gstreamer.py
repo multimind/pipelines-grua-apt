@@ -11,8 +11,11 @@ from PIL import Image
 import time
 from datetime import datetime
 import os
+import pika 
 
-def on_new_sample(sink):
+def on_new_sample(sink,user_data):
+    channel=user_data
+
     sample = sink.emit("pull-sample")
 
     if not sample:
@@ -69,14 +72,22 @@ def on_new_sample(sink):
 
         nombre_captura=nombre_captura+"_"+str(width)+"_"+str(height)
 
-        image.save("frames/"+nombre_captura+".jpg")
+        nombre_final="frames/"+nombre_captura+".jpg"
+        image.save(nombre_final)
 
+        channel.basic_publish(exchange='', routing_key='grua_apt', body=nombre_final)
+        
     finally:
         buffer.unmap(map_info)
 
     return Gst.FlowReturn.OK
 
 def main():
+    
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+    channel.queue_declare(queue='grua_apt')
+
     os.makedirs("frames", exist_ok=True)
     # Initialize GStreamer
     Gst.init(None)
@@ -94,7 +105,7 @@ def main():
     appsink.set_property("sync", False)
 
     # Connect the new-sample signal to the callback
-    appsink.connect("new-sample", on_new_sample)
+    appsink.connect("new-sample", on_new_sample,channel)
 
     # Start the pipeline
     pipeline.set_state(Gst.State.PLAYING)
