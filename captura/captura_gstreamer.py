@@ -62,6 +62,8 @@ def on_new_sample(sink):
 
         nombre_captura=str(integer_part)+"_"+str(fractional_part)
 
+        nombre_captura=nombre_captura+"_"+str(width)+"_"+str(height)
+
         image.save("frames/"+nombre_captura+".jpg")
 
     finally:
