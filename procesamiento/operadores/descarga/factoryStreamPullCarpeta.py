@@ -48,12 +48,15 @@ class FactoryStreamPullCarpeta:
                 archivos = os.listdir(self.ruta_carpeta)
                 
                 if len(archivos)==0:
+                    print("nada por procesar, duermo")
                     time.sleep(0.1)
                     continue
 
                 archivos = sorted(archivos)
 
                 for archivo in archivos:
+
+                    print("procesando"+archivo)
 
                     archivo=archivo.rstrip(".jpg")
 
