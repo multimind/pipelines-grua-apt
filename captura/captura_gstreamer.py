@@ -36,7 +36,7 @@ def on_new_sample(sink):
 
         width = structure.get_int("width")[1]
         height = structure.get_int("height")[1]
-        
+
         if format_ != "RGB":
             print("Unsupported format. Adjust GStreamer pipeline to output RGB.")
             return Gst.FlowReturn.OK
@@ -54,6 +54,11 @@ def on_new_sample(sink):
 
         # Save the image using PIL (optional)
         image = Image.fromarray(data, "RGB")
+
+        width=1920
+        height=1080
+        new_size = (width, height)  
+        image = image.resize(new_size)
 
         timestamp = time.time()
 

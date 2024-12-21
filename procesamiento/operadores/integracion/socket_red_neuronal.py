@@ -57,8 +57,11 @@ def procesarImagen(servidor,puerto,tag_detecciones,fabrica=None,nombre_red="pixe
                     arreglo_imagen=[str(ruta_imagen)]
                     print("aca???")
                     message = pickle.dumps(arreglo_imagen)
+                    print("enviado")
                     sock.sendall(message)
+                    print("antes recibir")
                     data = sock.recv(4096)
+                    print("recibido")
                     sock.close()
                     data_recibida = pickle.loads(data)
 
