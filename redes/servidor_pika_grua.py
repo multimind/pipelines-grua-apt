@@ -62,7 +62,7 @@ def callback(ch, method, properties, body):
     inferir_imagen(url_frame, model)
  
 def procesar(config):
-
+    global model
     model = YOLO(config.get("PESOS","ruta"))
     
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
