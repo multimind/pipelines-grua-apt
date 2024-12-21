@@ -1,6 +1,9 @@
 import gi
 
 gi.require_version('Gst', '1.0')
+gi.require_version('GLib', '2.0')
+
+from PIL import Image
 import time
 from gi.repository import Gst, GObject
 from datetime import datetime
@@ -10,50 +13,75 @@ from datetime import datetime
 Gst.init(None)
 
 # Create the pipeline
-pipeline = Gst.parse_launch(
-    "rtspsrc location=rtsp://192.168.1.102:554/Streaming/Channels/101 user-id=admin user-pw=Hik13579 ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=sink"
-)
+
 
 # Get the appsink element
 appsink = pipeline.get_by_name("sink")
 
 def on_new_sample(sink):
     sample = sink.emit("pull-sample")
-    if sample:
-        # Get timestamp from sample (seconds since epoch)
-        timestamp = sample.get_buffer().pts / Gst.SECOND
-        timestamp_str = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d_%H-%M-%S-%f')
 
-        # Get the frame and save it as a JPEG file with the timestamp
+    if not sample:
+        return Gst.FlowReturn.ERROR
+    
+        # Get the buffer from the sample
+    buffer = sample.get_buffer()
+
+    # Map the buffer to access the data
+    success, map_info = buffer.map(Gst.MapFlags.READ)
+    if not success:
+        return Gst.FlowReturn.ERROR
+
+    # Convert the raw data into an image
+    try:
+        # Example assumes video is in RGB format
         caps = sample.get_caps()
         width = caps.get_structure(0).get_int("width")[1]
         height = caps.get_structure(0).get_int("height")[1]
-        buffer = sample.get_buffer()
+        data = np.frombuffer(map_info.data, np.uint8).reshape((height, width, 3))
 
-        # Create the filename based on the timestamp
-        filename = f"frame_{timestamp_str}.jpg"
+        # Save the image using PIL (optional)
+        image = Image.fromarray(data, "RGB")
+        image.save("frame.jpg")
+        print("Frame saved as frame.jpg")
 
-        # Save the frame as an image
-        success, map_info = buffer.map(Gst.MapFlags.READ)
-        if success:
-            with open(filename, "wb") as f:
-                f.write(map_info.data)
-            buffer.unmap(map_info)
+    finally:
+        buffer.unmap(map_info)
 
     return Gst.FlowReturn.OK
 
-# Connect the signal for new sample
-appsink.connect("new-sample", on_new_sample)
+def main():
+    # Initialize GStreamer
+    Gst.init(None)
 
-# Start the pipeline
-pipeline.set_state(Gst.State.PLAYING)
+    # Create the pipeline
+    pipeline = Gst.parse_launch(
+    "rtspsrc location=rtsp://192.168.1.102:554/Streaming/Channels/101 user-id=admin user-pw=Hik13579 ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=sink"
+    )
 
-# Run the GStreamer main loop
-loop = GObject.MainLoop()
-try:
-    loop.run()
-except KeyboardInterrupt:
-    pass
+    # Get the appsink element
+    appsink = pipeline.get_by_name("sink")
 
-# Stop the pipeline
-pipeline.set_state(Gst.State.NULL)
+    # Set the appsink to emit signals
+    appsink.set_property("emit-signals", True)
+    appsink.set_property("sync", False)
+
+    # Connect the new-sample signal to the callback
+    appsink.connect("new-sample", on_new_sample)
+
+    # Start the pipeline
+    pipeline.set_state(Gst.State.PLAYING)
+
+    # Run the main loop
+    loop = GLib.MainLoop()
+    try:
+        loop.run()
+    except KeyboardInterrupt:
+        print("Stopping...")
+    finally:
+        # Clean up
+        pipeline.set_state(Gst.State.NULL)
+
+# Run the script
+if __name__ == "__main__":
+    main()
