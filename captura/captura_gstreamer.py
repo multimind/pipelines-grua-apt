@@ -1,4 +1,6 @@
 import gi
+import numpy as np
+from PIL import Image
 
 gi.require_version('Gst', '1.0')
 gi.require_version('GLib', '2.0')
