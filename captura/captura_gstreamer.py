@@ -8,16 +8,6 @@ import time
 from gi.repository import Gst, GObject
 from datetime import datetime
 
-
-# Initialize GStreamer
-Gst.init(None)
-
-# Create the pipeline
-
-
-# Get the appsink element
-appsink = pipeline.get_by_name("sink")
-
 def on_new_sample(sink):
     sample = sink.emit("pull-sample")
 
@@ -56,7 +46,7 @@ def main():
 
     # Create the pipeline
     pipeline = Gst.parse_launch(
-    "rtspsrc location=rtsp://192.168.1.102:554/Streaming/Channels/101 user-id=admin user-pw=Hik13579 ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=sink"
+        "rtspsrc location=rtsp://192.168.1.102:554/Streaming/Channels/101 user-id=admin user-pw=Hik13579 ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=sink"
     )
 
     # Get the appsink element
