@@ -31,6 +31,8 @@ def procesarImagen(servidor,puerto,tag_detecciones,fabrica=None,nombre_red="pixe
 
             def on_next(json_datos):
 
+                print("aca!")
+
                 logging.debug(">> Iniciando socket red neuronal {} ".format(puerto))
 
                 ruta_base = json_datos["ruta_base"]
@@ -45,6 +47,7 @@ def procesarImagen(servidor,puerto,tag_detecciones,fabrica=None,nombre_red="pixe
                 #OJO: que se perderían maquinas cuando no hay trabajador
 
                 try:
+                    print("conectando!?")
                     logging.debug("conectando con : {} {}".format(servidor,puerto))
                     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 

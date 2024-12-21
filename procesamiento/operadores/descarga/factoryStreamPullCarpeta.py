@@ -55,7 +55,7 @@ class FactoryStreamPullCarpeta:
                 archivos = sorted(archivos)
 
                 for archivo in archivos:
-
+                    original=archivo
                     print("procesando"+archivo)
 
                     archivo=archivo.rstrip(".jpg")
