@@ -11,6 +11,7 @@ sys.path.append('/home/multimind/sm/safetymind-aceros-arequipa/procesamiento')
 from operadores.descarga import factoryStreamRtsp
 from operadores.descarga import factoryStreamMp4
 from operadores.descarga import factoryStreamCarpeta
+from operadores.descarga import factoryStreamPullCarpeta
 from operadores.debug import print_observer
 from operadores.integracion import socket_red_neuronal
 from operadores.medicion import calcular_areas_gruas
