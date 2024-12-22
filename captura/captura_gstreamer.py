@@ -91,7 +91,10 @@ def on_new_sample(sink,user_data):
     except pika.exceptions.UnroutableError as e:
         print(f"Message could not be routed: {e}")
     finally:
-        buffer.unmap(map_info)
+        print("  antes unbuffer")
+        if not(buffer is None or map_info is None):
+            buffer.unmap(map_info)
+        print("  despues buffer")
 
     print("==fin normal")
     
