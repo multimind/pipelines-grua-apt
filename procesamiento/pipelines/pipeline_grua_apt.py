@@ -69,35 +69,15 @@ def procesar(config):
 
     variables_globales={"cantidad_alertas":0}
 
-
-    # Connect to RabbitMQ server
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-    channel = connection.channel()
-
-    result = channel.queue_declare(queue='', exclusive=True)
-    callback_queue = result.method.queue
-    
-    nombre_canaral='grua_apt'
-    # Declare a queue
-    channel.queue_declare(queue=nombre_canaral)
-
-# # Send a message
-# message = "Hello, server!"
-# channel.basic_publish(exchange='', routing_key='test_queue', body=message)
-# print(f"Sent: {message}")
-
-# # Close the connection
-# connection.close()
-
-    compuesto=stream.pipe(
-        pika_red_neuronal.procesar_imagen(nombre_canaral,"detecciones",None, "detectron2"),
+   compuesto=stream.pipe(
+        #pika_red_neuronal.procesar_imagen(nombre_canaral,"detecciones",None, "detectron2"),
         #socket_red_neuronal.procesarImagen(config["RED_DETECCION_GRUA"]["ip"],int(config["RED_DETECCION_GRUA"]["puerto"]),"detecciones",None, "detectron2"),
-        #calcular_areas_gruas.calcular("estructura_imanes",variables_globales,config.getint("GRUA","delta_x"),config.getint("GRUA","delta_y")),
-        #trabajador_en_zona_grua.detectar(variables_globales),
-        #pintar_grua_apt.pintar(variables_globales,config["DESCARGA"]["pintados"]),
-        #operador_generar_alerta.alerta_imagen(variables_globales,config["TELEGRAM"]["url"],config["TELEGRAM"]["chat_id"],config["DESCARGA"]["pintados"]),
-        #guardar_raros.guardar(variables_globales,config["DESCARGA"]["raros"]),
-        #operador_limpiar.limpiar(variables_globales,config["DESCARGA"]["pintados"])
+        calcular_areas_gruas.calcular("estructura_imanes",variables_globales,config.getint("GRUA","delta_x"),config.getint("GRUA","delta_y")),
+        trabajador_en_zona_grua.detectar(variables_globales),
+        pintar_grua_apt.pintar(variables_globales,config["DESCARGA"]["pintados"]),
+        operador_generar_alerta.alerta_imagen(variables_globales,config["TELEGRAM"]["url"],config["TELEGRAM"]["chat_id"],config["DESCARGA"]["pintados"]),
+        guardar_raros.guardar(variables_globales,config["DESCARGA"]["raros"]),
+        operador_limpiar.limpiar(variables_globales,config["DESCARGA"]["pintados"])
     )
 
     printObserver=print_observer.PrintObserver()

@@ -25,7 +25,7 @@ def calcular(clase, variables_globales,delta_x=100,delta_y=50):
                     cx=int(ancho/2.0)
                     cy=int(alto/2.0)
 
-                    detecciones=json["detecciones"]
+                    detecciones=json["boxes"]
                     puntos_elipse = []
 
                     cantidad_estructuras=0

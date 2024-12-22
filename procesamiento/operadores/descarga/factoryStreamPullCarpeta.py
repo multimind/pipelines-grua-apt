@@ -38,7 +38,6 @@ class FactoryStreamPullCarpeta:
 
         return
 
-
     def leer_datos(self,observer, scheduler):
 
         while True:
@@ -58,9 +57,7 @@ class FactoryStreamPullCarpeta:
                     
                     print("procesando"+archivo)
 
-                    solo_nombre=archivo.rstrip(".jpg")
-
-                    parts = solo_nombre.split('_')
+                    parts = archivo.split('_')
 
                     timestamp_entero=int(parts[0])
                     timestamp_fraccion=int(parts[1])
@@ -68,9 +65,16 @@ class FactoryStreamPullCarpeta:
                     ancho = int(parts[2])
                     alto = int(parts[3])
 
+                    f = open("/data/pipelines-grua-apt/captura/boxes/"+archivo, "r")
+                    boxes = f.readlines()
+                    f.close()
+
+                    print(lines)
+
                     json_datos = {
-                        "nombre_imagen": archivo, 
-                        "ruta_base":self.ruta_carpeta,
+                        "nombre_imagen": archivo+".jpg", 
+                        "ruta_base": "/data/pipelines-grua-apt/captura/frames",
+                        "detecciones": boxes,"
                         "timestamp_entero":timestamp_entero,
                         "timestamp_fraccion":timestamp_fraccion,
                         "ancho":ancho,
