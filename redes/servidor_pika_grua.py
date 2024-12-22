@@ -28,6 +28,7 @@ def log_setup(path, level):
 def inferir_imagen(nombre_imagen, model):
 
     solo_nombre = os.path.basename(nombre_imagen)
+    solo_nombre = solo_nombre.replace(".jpg", "")
 
     results = model(nombre_imagen)[0] 
     boxes = results.boxes.data.tolist()
@@ -35,7 +36,7 @@ def inferir_imagen(nombre_imagen, model):
 
     respuesta = []
 
-    ruta_boxes="/data/pipelines-grua-apt/captura"
+    ruta_boxes="/data/pipelines-grua-apt/captura/boxes"
 
     if len(boxes)==0:
 
