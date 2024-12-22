@@ -14,6 +14,7 @@ import os
 import pika 
 
 def on_new_sample(sink,user_data):
+    print("==inicio")
     channel=user_data
 
     sample = sink.emit("pull-sample")
@@ -27,10 +28,13 @@ def on_new_sample(sink,user_data):
     # Map the buffer to access the data
     success, map_info = buffer.map(Gst.MapFlags.READ)
     if not success:
+        print("==fin mapeo")
+    
         return Gst.FlowReturn.ERROR
 
     # Convert the raw data into an image
     try:
+       
         # Example assumes video is in RGB format
         caps = sample.get_caps()
         structure = caps.get_structure(0)
@@ -82,6 +86,8 @@ def on_new_sample(sink,user_data):
     finally:
         buffer.unmap(map_info)
 
+    print("==fin normal")
+    
     return Gst.FlowReturn.OK
 
 def main():
@@ -120,7 +126,9 @@ def main():
         print("Stopping...")
     finally:
         # Clean up
+        loop.quit()
         pipeline.set_state(Gst.State.NULL)
+        
 
 # Run the script
 if __name__ == "__main__":
