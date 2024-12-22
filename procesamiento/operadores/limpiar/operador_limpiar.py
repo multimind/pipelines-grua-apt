@@ -18,6 +18,9 @@ def limpiar( variables_globales,ruta_pintados):
             def on_next(json):
 
                 try:
+                    solo_nombre=json["nombre_imagen"].replace(".jpg","")
+
+                    os.remove("/data/pipelines-grua-apt/captura/boxes" + "/" + solo_nombre)
                  
                     if(variables_globales["alerta"]=="si"):
                         pass
@@ -25,9 +28,8 @@ def limpiar( variables_globales,ruta_pintados):
                         os.remove(json["ruta_base"]+"/"+json["nombre_imagen"])
                         os.remove(json["ruta_base"]+"/"+json["nombre_imagen"])
 
-                        solo_nombre=json["nombre_imagen"].replace(".jpg","")
-
-                        os.remove("/data/pipelines-grua-apt/captura/boxes" + "/" + solo_nombre)
+                    
+                       
        
                 except Exception as err:
                     print(err)
