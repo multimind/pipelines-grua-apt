@@ -33,9 +33,12 @@ def calcular(clase_buscada, variables_globales,delta_x=100,delta_y=50):
 
                     estructuras=[]
                     for deteccion in detecciones:
+                        
                         clase_deteccion = deteccion["clase"]
-                        if not clase_deteccion in clase:
+
+                        if not clase_deteccion == clase_buscada:
                             continue
+                            
                         cantidad_estructuras=cantidad_estructuras+1
                         deteccion["seleccionada"]="no"
                         estructuras.append(deteccion)
