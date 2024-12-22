@@ -20,7 +20,7 @@ def convertir():
                 try:
                     boxes=json["boxes"]
 
-                    dectecciones=[]
+                    detecciones=[]
 
                     for box in boxes:
                         
