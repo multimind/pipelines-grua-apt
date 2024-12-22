@@ -17,7 +17,7 @@ def calcular(clase_buscada, variables_globales,delta_x=100,delta_y=50):
             def on_next(datos):
 
                 try:
-                    print("estoy aca????!!")
+                    print("==inicio calcular areas")
                     print(datos)
                     json = datos
                     ancho=json["ancho"]
@@ -84,6 +84,8 @@ def calcular(clase_buscada, variables_globales,delta_x=100,delta_y=50):
                     print(err)
                     logging.error("Exception occurred", exc_info=True)
 
+                print("==fin calcular areas")
+                    
                 observer.on_next(json)
 
             return source.subscribe(
