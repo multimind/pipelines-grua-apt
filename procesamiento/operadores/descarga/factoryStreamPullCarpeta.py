@@ -69,8 +69,6 @@ class FactoryStreamPullCarpeta:
                     boxes = f.readlines()
                     f.close()
 
-                    print(lines)
-
                     json_datos = {
                         "nombre_imagen": archivo+".jpg", 
                         "ruta_base": "/data/pipelines-grua-apt/captura/frames",
