@@ -26,10 +26,7 @@ def limpiar( variables_globales,ruta_pintados):
                         pass
                     else:
                         os.remove(json["ruta_base"]+"/"+json["nombre_imagen"])
-                        os.remove(json["ruta_base"]+"/"+json["nombre_imagen"])
-
-                    
-                       
+                        os.remove("/data/pipelines-grua-apt/runtime/pintados/"+json["nombre_imagen"])
        
                 except Exception as err:
                     print(err)
