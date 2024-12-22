@@ -32,6 +32,7 @@ from paramiko import SSHClient
 import paramiko
 from datetime import datetime
 import argparse
+import os
 
 def procesar(config):
 
