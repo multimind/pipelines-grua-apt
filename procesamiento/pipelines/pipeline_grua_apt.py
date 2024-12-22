@@ -65,10 +65,11 @@ def procesar(config):
     hora_america = pytz.timezone('America/Santiago')
 
     variables_globales={"cantidad_alertas":0}
-
-   compuesto=stream.pipe(
-        #pika_red_neuronal.procesar_imagen(nombre_canaral,"detecciones",None, "detectron2"),
-        #socket_red_neuronal.procesarImagen(config["RED_DETECCION_GRUA"]["ip"],int(config["RED_DETECCION_GRUA"]["puerto"]),"detecciones",None, "detectron2"),
+    
+    #pika_red_neuronal.procesar_imagen(nombre_canaral,"detecciones",None, "detectron2"),
+    #socket_red_neuronal.procesarImagen(config["RED_DETECCION_GRUA"]["ip"],int(config["RED_DETECCION_GRUA"]["puerto"]),"detecciones",None, "detectron2"),
+       
+    compuesto=stream.pipe(
         calcular_areas_gruas.calcular("estructura_imanes",variables_globales,config.getint("GRUA","delta_x"),config.getint("GRUA","delta_y")),
         trabajador_en_zona_grua.detectar(variables_globales),
         pintar_grua_apt.pintar(variables_globales,config["DESCARGA"]["pintados"]),
