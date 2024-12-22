@@ -14,7 +14,6 @@ from operadores.descarga import factoryStreamCarpeta
 from operadores.descarga import factoryStreamPullCarpeta
 from operadores.debug import print_observer
 from operadores.integracion import socket_red_neuronal
-from operadores.integracion import pika_red_neuronal
 from operadores.medicion import calcular_areas_gruas
 from operadores.dibujo import pintar_grua_apt
 from operadores.deteccion import trabajador_en_zona_grua
@@ -32,8 +31,6 @@ from paramiko import SSHClient
 import paramiko
 from datetime import datetime
 import argparse
-
-import pika
 
 def procesar(config):
 
