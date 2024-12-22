@@ -73,6 +73,8 @@ def callback(ch, method, properties, body):
         print("archivo no existe: "+url_frame)
     else:
         inferir_imagen(url_frame, model)
+    
+    ch.basic_ack(delivery_tag=method.delivery_tag)
  
 def procesar(config):
     global model
