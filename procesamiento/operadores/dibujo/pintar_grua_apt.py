@@ -53,15 +53,15 @@ def pintar( variables_globales,ruta_pintada):
                             draw.rectangle((x1,y1,x2,y2), outline = outline ,width=5)
 
                         
-                    print(".....")
+                   
 
                     if "area_seguridad_roja" in variables_globales:
-                        print("sss")
+                       
                         area_seguridad_roja=variables_globales["area_seguridad_roja"]
                         outline="yellow"
-                        print("w")
+                        
                         draw.rectangle((area_seguridad_roja[0],area_seguridad_roja[1],area_seguridad_roja[2],area_seguridad_roja[3]), outline = outline ,width=5)
-                        print("z")
+                      
                     img.save(ruta_pintada + "/" + nombre_imagen)
 
                 except Exception as err:

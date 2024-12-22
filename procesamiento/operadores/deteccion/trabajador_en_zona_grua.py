@@ -57,7 +57,7 @@ def detectar(variables_globales):
                 return False
 
             def on_next(datos):
-                print("==inicio calcular trabajador")
+                
                     
                 try:
                     json = datos
@@ -96,7 +96,7 @@ def detectar(variables_globales):
                 except Exception as err:
                     print(err)
                     logging.error("Exception occurred", exc_info=True)
-                print("==fin trabajador")
+              
                 observer.on_next(json)
 
             return source.subscribe(

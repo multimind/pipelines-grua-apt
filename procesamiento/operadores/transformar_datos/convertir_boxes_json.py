@@ -16,7 +16,7 @@ def convertir():
         def subscribe(observer, scheduler = None):
 
             def on_next(json):
-                print("==inicio convertir")
+                
                 try:
                     boxes=json["boxes"]
 
@@ -37,7 +37,7 @@ def convertir():
                 except Exception as err:
                     print(err)
                     logging.error("Exception occurred", exc_info=True)
-                print("==fin convertir")
+                
                 observer.on_next(json)
 
             return source.subscribe(
