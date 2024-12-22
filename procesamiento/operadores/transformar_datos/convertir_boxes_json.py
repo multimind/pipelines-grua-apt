@@ -24,7 +24,7 @@ def convertir():
 
                     for box in boxes:
                         
-                        clase, part2 = deteccion.split(":")
+                        clase, part2 = box.split(":")
                         
                         part2 = part2.strip()
 
