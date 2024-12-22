@@ -10,6 +10,7 @@ def enviar_imagen_factor(chat_id,telegram_url,enviar_alerta_telegram):
         def subscribe(observer, scheduler=None):
         
             def on_next(json_datos):
+                print("==dentro enviar alerta")
 
                 enviar_alerta = json_datos["enviar_alerta"]
 
@@ -54,7 +55,8 @@ def enviar_imagen_factor(chat_id,telegram_url,enviar_alerta_telegram):
 
                         variables_globales["ultima_alerta"]=current_time
                     #os.remove(ruta_imagen)
-                    
+
+                print("==fin  enviar alerta")        
                 observer.on_next(json_datos)
             
             return source.subscribe(
