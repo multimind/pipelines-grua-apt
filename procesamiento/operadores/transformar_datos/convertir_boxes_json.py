@@ -18,7 +18,7 @@ def convertir():
             def on_next(json):
                 print("==inicio convertir")
                 try:
-                    boxes=json[boxes]
+                    boxes=json["boxes"]
 
                     dectecciones=[]
 
