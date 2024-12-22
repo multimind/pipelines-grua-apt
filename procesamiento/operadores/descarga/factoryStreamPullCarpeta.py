@@ -79,10 +79,10 @@ class FactoryStreamPullCarpeta:
                         "alto":alto,
                         "factor_riesgo":"no"
                     }
-                    print("aca???")
-                    print(json_datos)
+                  
+                  
                     observer.on_next(json_datos)
-                    print("sigo")
+                  
 
 
             except Exception as e:
