@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 import math
 
-def calcular(clase, variables_globales,delta_x=100,delta_y=50):
+def calcular(clase_buscada, variables_globales,delta_x=100,delta_y=50):
 
     def _principal(source):
 
@@ -26,7 +26,7 @@ def calcular(clase, variables_globales,delta_x=100,delta_y=50):
                     cx=int(ancho/2.0)
                     cy=int(alto/2.0)
 
-                    detecciones=json["boxes"]
+                    detecciones=json["detecciones"]
                     puntos_elipse = []
 
                     cantidad_estructuras=0

@@ -20,6 +20,7 @@ from operadores.deteccion import trabajador_en_zona_grua
 from operadores.debug import guardar_raros
 from operadores.alerta import operador_generar_alerta
 from operadores.limpiar import operador_limpiar
+from operadores.transformar_datos import convertir_boxes_json
 from util import configuracion_logger
 import logging
 import configparser
@@ -70,6 +71,7 @@ def procesar(config):
     #socket_red_neuronal.procesarImagen(config["RED_DETECCION_GRUA"]["ip"],int(config["RED_DETECCION_GRUA"]["puerto"]),"detecciones",None, "detectron2"),
        
     compuesto=stream.pipe(
+        convertir_boxes_json.convertir(),
         calcular_areas_gruas.calcular("estructura_imanes",variables_globales,config.getint("GRUA","delta_x"),config.getint("GRUA","delta_y")),
         trabajador_en_zona_grua.detectar(variables_globales),
         pintar_grua_apt.pintar(variables_globales,config["DESCARGA"]["pintados"]),
