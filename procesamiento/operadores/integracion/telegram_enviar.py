@@ -29,6 +29,8 @@ def enviar_imagen_factor(chat_id,telegram_url,enviar_alerta_telegram):
 
                         if diferencia.seconds < 60:
                             confirmar_alerta=False
+                        else
+                            confirmar_alerta=True
 
                     if confirmar_alerta=True:
                         ruta_factor = json_datos["ruta_factor"]
