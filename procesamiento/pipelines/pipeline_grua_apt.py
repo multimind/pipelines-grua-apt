@@ -85,6 +85,7 @@ def procesar(config):
     compuesto.subscribe(printObserver)
 
 if __name__ == "__main__":
+    os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
 
     parser = argparse.ArgumentParser(description="Archivo de configu")
     parser.add_argument("ruta_archivo_configuracion")
