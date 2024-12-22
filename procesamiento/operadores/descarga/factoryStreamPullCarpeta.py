@@ -74,7 +74,7 @@ class FactoryStreamPullCarpeta:
                     json_datos = {
                         "nombre_imagen": archivo+".jpg", 
                         "ruta_base": "/data/pipelines-grua-apt/captura/frames",
-                        "detecciones": boxes,"
+                        "boxes": boxes,
                         "timestamp_entero":timestamp_entero,
                         "timestamp_fraccion":timestamp_fraccion,
                         "ancho":ancho,
