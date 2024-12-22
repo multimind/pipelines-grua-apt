@@ -85,9 +85,11 @@ def on_new_sample(sink,user_data):
         image.save(nombre_final)
 
         ruta_frames="/data/pipelines-grua-apt/captura/"
-
+        print("antes de publicar!!!")
         channel.basic_publish(exchange='', routing_key='grua_apt', body=ruta_frames+nombre_final)
-        
+        print("publicado!")
+    except pika.exceptions.UnroutableError as e:
+        print(f"Message could not be routed: {e}")
     finally:
         buffer.unmap(map_info)
 
@@ -100,6 +102,7 @@ def main():
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
     channel.queue_declare(queue='grua_apt')
+    channel.confirm_delivery()
 
     os.makedirs("frames", exist_ok=True)
     # Initialize GStreamer
