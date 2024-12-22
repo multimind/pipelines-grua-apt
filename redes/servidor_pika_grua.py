@@ -27,31 +27,41 @@ def log_setup(path, level):
     
 def inferir_imagen(nombre_imagen, model):
 
+    solo_nombre = os.path.basename(nombre_imagen)
+
     results = model(nombre_imagen)[0] 
     boxes = results.boxes.data.tolist()
     classes = results.names
 
     respuesta = []
 
-    if len(boxes) > 0:
+    ruta_boxes="/data/pipelines-grua-apt/captura"
 
-        for box in boxes:
-            class_id = box[-1]
-            res = str(classes.get(int(class_id)))+':'+str(int(box[0]))+","+str(int(box[1]))+","+str(int(box[2]))+","+str(int(box[3]))
+    if len(boxes)==0:
 
-            confidence = box[4]
+        f = open(ruta_boxes+"/"+solo_nombre, "+w")
+        f.write("")
+        f.close()
+        return
 
-            if confidence>0.8:
-                respuesta.append(res)
+    seleccionados=[]
+    
+    for box in boxes:
+        class_id = box[-1]
+        res = str(classes.get(int(class_id)))+':'+str(int(box[0]))+","+str(int(box[1]))+","+str(int(box[2]))+","+str(int(box[3]))
 
-        if respuesta==[]:
-            return [False,respuesta]
+        confidence = box[4]
 
-        return [True, respuesta]
+        if confidence>0.8:
+            seleccionados.append(res)
 
-    else:
-        return [False, respuesta]
-
+    f = open(ruta_boxes+"/"+solo_nombre, "+w")
+       
+    for seleccionado in seleccionados:
+        f.write(seleccionado+"\n")
+    
+    f.close() 
+    
 # Callback for handling messages
 def callback(ch, method, properties, body):
     global model
