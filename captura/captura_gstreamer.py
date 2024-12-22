@@ -20,6 +20,7 @@ def on_new_sample(sink,user_data):
     sample = sink.emit("pull-sample")
 
     if not sample:
+        print("error!!!!")
         return Gst.FlowReturn.ERROR
     
         # Get the buffer from the sample
@@ -31,6 +32,7 @@ def on_new_sample(sink,user_data):
         print("==fin mapeo")
     
         return Gst.FlowReturn.ERROR
+    print("a0")
 
     # Convert the raw data into an image
     try:
@@ -47,7 +49,8 @@ def on_new_sample(sink,user_data):
         if format_ != "RGB":
             print("Unsupported format. Adjust GStreamer pipeline to output RGB.")
             return Gst.FlowReturn.OK
- 
+
+        print("a1")
 
         bpp = 3  # Bytes per pixel for RGB
         expected_size = width * height * bpp
@@ -68,6 +71,8 @@ def on_new_sample(sink,user_data):
         image = image.resize(new_size)
 
         timestamp = time.time()
+        
+        print("a2")
 
         integer_part = int(timestamp)
         fractional_part = int((timestamp - integer_part) * 1_000_000)
