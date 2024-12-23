@@ -14,7 +14,7 @@ import os
 import pika 
 from systemd.daemon import notify
 
-STATUS_FILE = "/var/run/apt-descarga.status"
+STATUS_FILE = "/run/apt_descarga/apt-descarga.status"
 
 def on_new_sample(sink,user_data):
     print("==inicio")
