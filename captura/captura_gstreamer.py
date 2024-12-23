@@ -12,6 +12,9 @@ import time
 from datetime import datetime
 import os
 import pika 
+from systemd.daemon import notify
+
+STATUS_FILE = "/var/run/apt-descarga.status"
 
 def on_new_sample(sink,user_data):
     print("==inicio")
@@ -98,6 +101,11 @@ def on_new_sample(sink,user_data):
 
     print("==fin normal")
     
+    with open(STATUS_FILE, "w") as f:
+        f.write(str(time.time()))
+    
+    notify("WATCHDOG=1")
+
     return Gst.FlowReturn.OK
 
 def main():
