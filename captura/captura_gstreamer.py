@@ -15,8 +15,12 @@ import pika
 from systemd.daemon import notify
 
 STATUS_FILE = "/run/apt_descarga/apt-descarga.status"
+ruta_frames=None
+nombre_canal=None
 
 def on_new_sample(sink,user_data):
+    global ruta_frames
+    
     print("==inicio")
     channel=user_data
 
@@ -87,10 +91,12 @@ def on_new_sample(sink,user_data):
         nombre_final="frames/"+nombre_captura+".jpg"
         image.save(nombre_final)
 
-        ruta_frames="/data/pipelines-grua-apt/captura/"
+        #ruta_frames="/data/pipelines-grua-apt/captura/"
+
         print("antes de publicar!!!")
         channel.basic_publish(exchange='', routing_key='imagen_grua_apt', body=ruta_frames+nombre_final)
         print("publicado!")
+    
     except pika.exceptions.UnroutableError as e:
         print(f"Message could not be routed: {e}")
     finally:
@@ -108,11 +114,16 @@ def on_new_sample(sink,user_data):
 
     return Gst.FlowReturn.OK
 
-def main():
-    
+def main(config):
+    global ruta_frames
+    global nombre_canal
+
+    ruta_frames=config["CAPTURA"]["ruta_frames"]
+    nombre_canal=config["CAPTURA"]["nombre_canal"]
+
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
-    channel.queue_declare(queue='imagen_grua_apt')
+    channel.queue_declare(queue=nombre_canal)
     channel.confirm_delivery()
 
     os.makedirs("frames", exist_ok=True)
@@ -121,7 +132,7 @@ def main():
 
     # Create the pipeline
     pipeline = Gst.parse_launch(
-        "rtspsrc location=rtsp://192.168.1.102:554/Streaming/Channels/101 user-id=admin user-pw=Hik13579 protocols=tcp ! rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! video/x-raw,format=RGB ! appsink name=sink"
+        config["CAPTURA"]["pipeline_gstreamer"]
     )
 
     # Get the appsink element
@@ -151,4 +162,13 @@ def main():
 
 # Run the script
 if __name__ == "__main__":
-    main()
+
+    parser.add_argument('archivo_configuracion')
+
+    args = vars(parser.parse_args())
+    archivo_configuracion = args['archivo_configuracion']
+
+    config = configparser.ConfigParser()
+    config.read(archivo_configuracion)
+
+    main(config)
