@@ -15,7 +15,7 @@ def pintar( variables_globales,ruta_pintada):
         def subscribe(observer, scheduler = None):
 
             def on_next(datos):
-
+                print(">pintar")
                 try:
                     json = datos
                     

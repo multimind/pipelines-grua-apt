@@ -15,7 +15,7 @@ def calcular(clase_buscada, variables_globales,delta_x=100,delta_y=50):
         def subscribe(observer, scheduler = None):
 
             def on_next(datos):
-
+                print(">calcular")
                 try:
                   
                     json = datos

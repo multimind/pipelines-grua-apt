@@ -10,7 +10,7 @@ def alerta_imagen(variables_globales,url, chat,ruta_pintados):
         def subscribe(observer, scheduler = None):
 
             def on_next(datos):
-
+                print(">alerta")
                 try:
                     json = datos
 

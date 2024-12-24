@@ -84,9 +84,9 @@ def procesar(config):
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
 
-    channel.queue_declare(queue='grua_apt')
+    channel.queue_declare(queue='imagen_grua_apt')
 
-    channel.basic_consume(queue='grua_apt', on_message_callback=callback)
+    channel.basic_consume(queue='imagen_grua_apt', on_message_callback=callback)
 
     channel.start_consuming()
 

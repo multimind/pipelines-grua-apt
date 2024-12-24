@@ -16,7 +16,7 @@ def convertir():
         def subscribe(observer, scheduler = None):
 
             def on_next(json):
-                
+                print(">convertir")
                 try:
                     boxes=json["boxes"]
 
