@@ -13,6 +13,8 @@ from datetime import datetime
 import os
 import pika 
 from systemd.daemon import notify
+import argparse
+import configparser
 
 STATUS_FILE = None
 ruta_frames=None
@@ -21,7 +23,7 @@ nombre_canal=None
 def on_new_sample(sink,user_data):
     global ruta_frames
     global STATUS_FILE
-
+    
     print("==inicio")
     channel=user_data
 
@@ -79,8 +81,6 @@ def on_new_sample(sink,user_data):
         image = image.resize(new_size)
 
         timestamp = time.time()
-        
-        print("a2")
 
         integer_part = int(timestamp)
         fractional_part = int((timestamp - integer_part) * 1_000_000)
@@ -89,11 +89,15 @@ def on_new_sample(sink,user_data):
 
         nombre_captura=nombre_captura+"_"+str(width)+"_"+str(height)
 
-        nombre_final="frames/"+nombre_captura+".jpg"
+        nombre_final=ruta_frames+"/"+nombre_captura+".jpg"
+
+        print("nombre_final")
+        print(nombre_final)
+
         image.save(nombre_final)
 
         print("antes de publicar!!!")
-        channel.basic_publish(exchange='', routing_key='imagen_grua_apt', body=ruta_frames+nombre_final)
+        channel.basic_publish(exchange='', routing_key='imagen_grua_apt', body=nombre_final)
         print("publicado!")
     
     except pika.exceptions.UnroutableError as e:
@@ -131,10 +135,13 @@ def main(config):
     os.makedirs("frames", exist_ok=True)
     
     Gst.init(None)
+    print(config["CAPTURA"]["pipeline_gstreamer"])
 
     pipeline = Gst.parse_launch(
         config["CAPTURA"]["pipeline_gstreamer"]
     )
+
+    print("aaaa")
 
     appsink = pipeline.get_by_name("sink")
 
@@ -146,6 +153,7 @@ def main(config):
     pipeline.set_state(Gst.State.PLAYING)
 
     loop = GLib.MainLoop()
+  
     try:
         loop.run()
     except KeyboardInterrupt:
@@ -157,6 +165,7 @@ def main(config):
         
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser(description='Captura gstreamer')
     parser.add_argument('archivo_configuracion')
 
     args = vars(parser.parse_args())

@@ -4,7 +4,6 @@ import configparser
 from logging.handlers import RotatingFileHandler
 
 import os
-import cv2
 
 from ultralytics import YOLO
 
@@ -13,6 +12,8 @@ import logging
 import argparse
 
 model=None
+ruta_boxes=None
+nombre_canal=None
 
 def log_setup(path, level):
 
@@ -26,7 +27,7 @@ def log_setup(path, level):
     logger.setLevel(level)
     
 def inferir_imagen(nombre_imagen, model):
-
+    global ruta_boxes
     solo_nombre = os.path.basename(nombre_imagen)
     solo_nombre = solo_nombre.replace(".jpg", "")
 
@@ -35,8 +36,6 @@ def inferir_imagen(nombre_imagen, model):
     classes = results.names
 
     respuesta = []
-
-    ruta_boxes="/data/pipelines-grua-apt/captura/boxes"
 
     if len(boxes)==0:
 
@@ -79,14 +78,20 @@ def callback(ch, method, properties, body):
  
 def procesar(config):
     global model
+    global ruta_boxes
+    global nombre_canal
+
+    ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
+    nombre_canal=config["PROCESAMIENTO"]["nombre_canal"]
+
     model = YOLO(config.get("PESOS","ruta"))
     
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
 
-    channel.queue_declare(queue='imagen_grua_apt')
+    channel.queue_declare(queue=nombre_canal)
 
-    channel.basic_consume(queue='imagen_grua_apt', on_message_callback=callback)
+    channel.basic_consume(queue=nombre_canal, on_message_callback=callback)
 
     channel.start_consuming()
 
