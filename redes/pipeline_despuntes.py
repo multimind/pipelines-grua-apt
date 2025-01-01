@@ -11,6 +11,7 @@ import argparse
 from PIL import Image,ImageDraw
 import datetime
 import math
+import requests
 
 nombre_canal=None
 
@@ -19,7 +20,7 @@ ruta_tiles=None
 ruta_pintadas=None
 
 channel=None
-detecciones_despuntes=[]
+grupos=[]
 
 def reconstruct_timestamp(integer_part, fractional_part):
     timestamp = float(integer_part) + int(fractional_part) / 1_000_000
@@ -68,6 +69,7 @@ class GrupoDespuntes:
         self.eliminar=False
         self.conexion=None
         self.alerta=0
+        self.solo_nombre=None
 
 def log_setup(path, level):
 
@@ -82,16 +84,11 @@ def log_setup(path, level):
     
 def analizar_box(url_box):
     global ruta_boxes
-    global detecciones_despuntes
+    global grupos
     
-    print("box!")
-    print(url_box)
-
     f = open(url_box, "r")
     boxes = f.readlines()
     f.close()
-
-    print(boxes)
 
     solo_nombre=os.path.basename(url_box)
 
@@ -103,11 +100,11 @@ def analizar_box(url_box):
     timestamp=reconstruct_timestamp(parte_entera,parte_flotante)
 
     grupo_despuntes=GrupoDespuntes([],[])
+    grupo_despuntes.solo_nombre=solo_nombre
 
     grupo_despuntes.timestamp=timestamp
 
     for box in boxes:
-        print(box.strip())
         partes=box.split(",")
 
         clase=partes[0]
@@ -119,93 +116,84 @@ def analizar_box(url_box):
         despunte=Despunte(timestamp,clase,x1,y1,x2,y2)
         grupo_despuntes.despuntes.append(despunte)
 
-    detecciones_despuntes.append(grupo_despuntes)
+    grupos.append(grupo_despuntes)
 
 
 def calcular_despuntes():
 
-    global detecciones_despuntes
+    global grupos
 
     print("numero de despuntes")
-    print(len(detecciones_despuntes))
+    print(len(grupos))
 
-    if len(detecciones_despuntes)<=1:
+    if len(grupos)<=1:
         return
 
-    anterior=None
+    grupo_anterior=grupos[-1]
+    grupo_actual=grupos[-2]
 
-    i=0
-
-    for grupo_despuntes in detecciones_despuntes:
-        grupo_despuntes.eliminar=False
+    grupo_anterior.eliminar=False
 
     indice_corto_circuito=None
+       
+    delta=grupo_actual.timestamp-grupo_anterior.timestamp
 
-    # marca los despuntes muy antiguos
-    for grupo_despuntes in reversed(detecciones_despuntes):
-    
-        if i==0:
-            anterior=grupo_despuntes
-            i=i+1
-            continue
-        
-        delta=anterior.timestamp-grupo_despuntes.timestamp
-        segundos=delta.total_seconds()
+    segundos=delta.total_seconds()
 
-        if segundos>5:
-            anterior.eliminar=True
-            indice_corto_circuito=i+1
-            break
-        
-        anterior=grupo_despuntes
-        i=i+1
-
-    #borra los despuntes antiguos
-    if not indice_corto_circuito==None:
-        detecciones_despuntes=detecciones_despuntes[:indice_corto_circuito]
-
-    print("cuatos quedan")
-    print(len(detecciones_despuntes))
-
-    grupo_anterior=None
-    i=0
+    if segundos>5:
+        print("mas de 5 segundos, se elimina la conexion anterior!")
+        grupos.pop(0) # elimina el grupo anterior
+        return
 
     hay_conexion=False
-
-    for grupo_despuntes in reversed(detecciones_despuntes):
-    
-        if i==0:
-            grupo_anterior=grupo_despuntes
-            i=i+1
-            continue
         
-        for despunte_actual in grupo_despuntes.despuntes:
+    for despunte_actual in grupo_actual.despuntes:
 
-            for despunte_anterior in grupo_anterior.despuntes:
+        for despunte_anterior in grupo_anterior.despuntes:
 
-                if despunte_actual.conexion == None and despunte_actual.esta_conectado_con(despunte_anterior):
-                    print("conectados!!!")
-                    despunte_actual.conexion=despunte_anterior
-                    grupo_despuntes.alerta=1
-                    hay_conexion=True
-                else:
-                    print("desconectado!!!")
+            if despunte_actual.conexion == None and despunte_actual.esta_conectado_con(despunte_anterior):
+                print("conectados!!!")
+                despunte_actual.conexion=despunte_anterior
+                #grupo_despuntes.alerta=1
+                hay_conexion=True
+            else:
+                print("desconectado!!!")
         
-        i=i+1
+    if hay_conexion==False:
+        print("sin conexiones!")
+        grupos.pop(0) # elimina el grupo anterior
+        return    
+
 
 
 def calcular_alertas():
-    global detecciones_despuntes
+    global grupos
+    global ruta_pintadas
+    
+    url="https://api.telegram.org/bot6832730134:AAEHCaubwIU1S8vx7llZ6IKQ7P-DavB0C1Q/"
+    canal_id= "-1002140998537"
 
-    suma_alertas=0
+    if len(grupos)==2:
+        print("ALERTA!!!!")
 
-    for grupo_despuntes in reversed(detecciones_despuntes):
-        suma_alertas=suma_alertas+grupo_despuntes.alerta
+        grupo=grupos[0]
+        solo_nombre=grupo.solo_nombre
+        solo_nombre=solo_nombre.replace(".txt","")
 
-    print("suma alertas")
-    print(suma_alertas)
-        
+        archivo = open(ruta_pintadas+"/"+solo_nombre,'rb')
+                        
+        mensaje="despunte"
+                        
+        url = url + "sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
 
+        files={'photo': archivo}
+        values={'upload_file' : ruta_pintadas+"/"+solo_nombre, 'mimetype':'image/jpg','caption':mensaje }
+
+        response = requests.post(url,files=files,data=values)
+
+        archivo.close()
+
+    
 # Callback for handling messages
 def callback(ch, method, properties, body):
     print(f"Received: {body.decode()}")
