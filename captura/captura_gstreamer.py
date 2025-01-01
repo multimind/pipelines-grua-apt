@@ -141,8 +141,6 @@ def main(config):
         config["CAPTURA"]["pipeline_gstreamer"]
     )
 
-    print("aaaa")
-
     appsink = pipeline.get_by_name("sink")
 
     appsink.set_property("emit-signals", True)

@@ -35,8 +35,7 @@ def procesar(config):
     indice=1
 
     vidcap = cv2.VideoCapture(url,cv2.CAP_FFMPEG)
-    #vidcap = cv2.VideoCapture(url)
-
+    
     if (vidcap.isOpened() == False):
         print("no se puede abrir archivo: "+url)
         return
@@ -48,6 +47,8 @@ def procesar(config):
             texto_fecha=datetime_actual.strftime('%Y_%m_%d')
             texto_hora=datetime_actual.strftime('%H_%M_%S_%f')
                 
+
+            
             nombre_imagen=texto_fecha+'-'+texto_hora+"-"+nombre_camara+".jpg"
 
             ruta_captura=ruta_descarga+"/"+nombre_imagen

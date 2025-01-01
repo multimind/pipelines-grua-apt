@@ -10,11 +10,94 @@ from ultralytics import YOLO
 import torch
 import logging
 import argparse
+from PIL import Image,ImageDraw
 
 model=None
-ruta_boxes=None
 nombre_canal=None
 
+ruta_boxes=None
+ruta_tiles=None
+ruta_pintadas=None
+
+channel=None
+ 
+def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,parte_fraccional):
+    global channel
+    image = Image.open(image_path)
+ 
+    img_width, img_height = image.size
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    patch_width, patch_height = patch_size
+    count = 0
+
+    hay_despunte=False
+
+    detecciones=[]
+
+    for y in range(0, img_height, patch_height):
+        for x in range(0, img_width, patch_width):
+           
+            coordenadas_crop = (x, y, x + patch_width, y + patch_height)
+            patch = image.crop(coordenadas_crop)
+
+            results = model(patch)[0] 
+            classes = results.names
+
+            boxes = results.boxes.data.tolist()
+
+            draw = ImageDraw.Draw(patch)
+            
+            for box in boxes:
+                class_id = box[-1]
+                confidence = box[4]
+
+                if confidence<0.6:
+                    continue
+
+                clase=str(classes.get(int(class_id)))
+
+                x1=box[0]
+                y1=box[1]
+                x2=box[2]
+                y2=box[3]
+
+                string_deteccion = str(clase)+','+str(int(x1))+","+str(int(y1))+","+str(int(x2))+","+str(int(y2))+","+str(parte_entera)+","+str(parte_fraccional)
+                detecciones.append(string_deteccion)
+
+                outline="white"
+                if clase=="despunte":
+                    outline="yellow"
+                elif clase=="trabajador":
+                    outline="blue"
+                
+                draw.rectangle((x1,y1,x2,y2), outline = outline ,width=5)
+
+                hay_despunte=True
+            
+            image.paste(patch, coordenadas_crop)
+
+    if hay_despunte:
+        print("CON despunte: "+image_path)
+        solo_nombre = os.path.basename(image_path)
+
+        ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
+        image.save(ruta_full_pintada)
+
+        ruta_full_boxes=ruta_boxes+"/"+solo_nombre+".txt"
+
+        f = open(ruta_full_boxes, "+w")
+
+        for deteccion in detecciones:
+            f.write(deteccion+"\n")
+    
+        f.close() 
+
+        channel.basic_publish(exchange='', routing_key="posible_alerta_despuntes", body=ruta_full_boxes)
+    else:
+        print("sin despunte: "+image_path)
+ 
 def log_setup(path, level):
 
     if not os.path.isdir("logs/despuntes/"):
@@ -31,36 +114,13 @@ def inferir_imagen(nombre_imagen, model):
     solo_nombre = os.path.basename(nombre_imagen)
     solo_nombre = solo_nombre.replace(".jpg", "")
 
-    results = model(nombre_imagen)[0] 
-    boxes = results.boxes.data.tolist()
-    classes = results.names
+    partes = solo_nombre.split("_")
 
-    respuesta = []
+    parte_entera = int(partes[0])
+    parte_fraccional = int(partes[1])
 
-    if len(boxes)==0:
-
-        f = open(ruta_boxes+"/"+solo_nombre, "+w")
-        f.write("")
-        f.close()
-        return
-
-    seleccionados=[]
-    
-    for box in boxes:
-        class_id = box[-1]
-        res = str(classes.get(int(class_id)))+':'+str(int(box[0]))+","+str(int(box[1]))+","+str(int(box[2]))+","+str(int(box[3]))
-
-        confidence = box[4]
-
-        if confidence>0.8:
-            seleccionados.append(res)
-
-    f = open(ruta_boxes+"/"+solo_nombre, "+w")
-       
-    for seleccionado in seleccionados:
-        f.write(seleccionado+"\n")
-    
-    f.close() 
+    patch_size = (640, 640)  
+    nombres_tiles=save_image_patches(nombre_imagen,patch_size,ruta_tiles,model, parte_entera, parte_fraccional)
     
 # Callback for handling messages
 def callback(ch, method, properties, body):
@@ -78,12 +138,19 @@ def callback(ch, method, properties, body):
  
 def procesar(config):
     global model
-    global ruta_boxes
     global nombre_canal
+    
+    global ruta_boxes
+    global ruta_tiles
+    global ruta_pintadas
+    global channel
 
-    ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     nombre_canal=config["PROCESAMIENTO"]["nombre_canal"]
 
+    ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
+    ruta_tiles=config["PROCESAMIENTO"]["ruta_tiles"]
+    ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
+    
     model = YOLO(config.get("PESOS","ruta"))
     
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
