@@ -216,7 +216,9 @@ def callback(ch, method, properties, body):
 
     print("borrando!")
     url_frame=ruta_frames+"/"+solo_nombre
-    os.remove(url_frame)
+
+    if os.path.exists(url_frame):
+        os.remove(url_frame)
 
 def procesar(config):
     global model
