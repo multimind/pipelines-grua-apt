@@ -63,6 +63,9 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
                 x2=box[2]
                 y2=box[3]
 
+                if y1 < 250 and y2 < 250:
+                    continue
+
                 string_deteccion = str(clase)+','+str(int(x1))+","+str(int(y1))+","+str(int(x2))+","+str(int(y2))+","+str(parte_entera)+","+str(parte_fraccional)
                 detecciones.append(string_deteccion)
 
