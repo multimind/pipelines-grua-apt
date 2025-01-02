@@ -215,7 +215,7 @@ def callback(ch, method, properties, body):
             calcular_alertas()
 
     print("borrando!")
-    url_frame=ruta_frames+"/"+solo_nombre+".jpg"
+    url_frame=ruta_frames+"/"+solo_nombre
     os.remove(url_frame)
 
 def procesar(config):
