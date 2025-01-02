@@ -42,6 +42,8 @@ def inferir_imagen(nombre_imagen, model):
         f = open(ruta_boxes+"/"+solo_nombre, "+w")
         f.write("")
         f.close()
+        os.remove(nombre_imagen)
+
         return
 
     seleccionados=[]
