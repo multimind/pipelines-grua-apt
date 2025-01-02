@@ -171,8 +171,11 @@ def calcular_alertas():
     global grupos
     global ruta_pintadas
     
-    url="https://api.telegram.org/bot6832730134:AAEHCaubwIU1S8vx7llZ6IKQ7P-DavB0C1Q/"
-    canal_id= "-1002140998537"
+    # url="https://api.telegram.org/bot6832730134:AAEHCaubwIU1S8vx7llZ6IKQ7P-DavB0C1Q/"
+    # canal_id= "-1002140998537"
+
+    url = "https://api.telegram.org/bot6200673556:AAHuj1i6NP59Qjau_PAVr5UxhtDz-Ex-jeY/"
+    canal_id = -1002142602982
 
     if len(grupos)==2:
         print("ALERTA!!!!")
