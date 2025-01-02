@@ -18,6 +18,7 @@ nombre_canal=None
 ruta_boxes=None
 ruta_tiles=None
 ruta_pintadas=None
+ruta_frames=None
 
 channel=None
 grupos=[]
@@ -196,9 +197,13 @@ def calcular_alertas():
     
 # Callback for handling messages
 def callback(ch, method, properties, body):
+    global ruta_frames
     print(f"Received: {body.decode()}")
 
     url_box=body.decode()
+
+    solo_nombre=os.path.basename(url_box)
+    solo_nombre=solo_nombre.replace(".txt","")
 
     if not os.path.isfile(url_box):
         print("archivo no existe: "+url_box)
@@ -209,6 +214,8 @@ def callback(ch, method, properties, body):
             calcular_despuntes()
             calcular_alertas()
 
+    os.remove(ruta_frames+"/"+solo_nombre+".jpg")
+
 def procesar(config):
     global model
     global nombre_canal
@@ -217,12 +224,14 @@ def procesar(config):
     global ruta_tiles
     global ruta_pintadas
     global channel
+    global ruta_frames
 
     nombre_canal=config["PROCESAMIENTO"]["nombre_canal"]
 
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     ruta_tiles=config["PROCESAMIENTO"]["ruta_tiles"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
+    ruta_frames=config["PROCESAMIENTO"]["ruta_frames"]
     
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
