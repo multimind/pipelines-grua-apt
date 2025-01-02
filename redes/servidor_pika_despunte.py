@@ -97,6 +97,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
         channel.basic_publish(exchange='', routing_key="posible_alerta_despuntes", body=ruta_full_boxes)
     else:
         print("sin despunte: "+image_path)
+        os.remove(image_path)
  
 def log_setup(path, level):
 
