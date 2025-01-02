@@ -53,7 +53,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
                 class_id = box[-1]
                 confidence = box[4]
 
-                if confidence<0.6:
+                if confidence<0.8:
                     continue
 
                 clase=str(classes.get(int(class_id)))
