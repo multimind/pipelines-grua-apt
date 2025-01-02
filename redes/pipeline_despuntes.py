@@ -20,6 +20,9 @@ ruta_tiles=None
 ruta_pintadas=None
 ruta_frames=None
 
+url_telegram=None
+canal_id=None
+
 channel=None
 grupos=[]
 
@@ -170,13 +173,10 @@ def calcular_despuntes():
 def calcular_alertas():
     global grupos
     global ruta_pintadas
+
+    global url_telegram
+    global canal_id
     
-    # url="https://api.telegram.org/bot6832730134:AAEHCaubwIU1S8vx7llZ6IKQ7P-DavB0C1Q/"
-    # canal_id= "-1002140998537"
-
-    url = "https://api.telegram.org/bot6200673556:AAHuj1i6NP59Qjau_PAVr5UxhtDz-Ex-jeY/"
-    canal_id = -1002142602982
-
     if len(grupos)==2:
         print("ALERTA!!!!")
 
@@ -191,7 +191,7 @@ def calcular_alertas():
                             
             mensaje="despunte"
                             
-            url = url + "sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
+            url = url_telegram + "sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
 
             files={'photo': archivo}
             values={'upload_file' : ruta_pintadas+"/"+solo_nombre, 'mimetype':'image/jpg','caption':mensaje }
@@ -236,12 +236,17 @@ def procesar(config):
     global channel
     global ruta_frames
 
+    global url_telegram
+    global canal_id
+
     nombre_canal=config["PROCESAMIENTO"]["nombre_canal"]
 
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     ruta_tiles=config["PROCESAMIENTO"]["ruta_tiles"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
-    ruta_frames=config["PROCESAMIENTO"]["ruta_frames"]
+   
+    url_telegram=config["TELEGRAM"]["url_telegram"]
+    canal_id=config["TELEGRAM"]["canal_id"]
     
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
