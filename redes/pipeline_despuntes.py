@@ -214,7 +214,9 @@ def callback(ch, method, properties, body):
             calcular_despuntes()
             calcular_alertas()
 
-    os.remove(ruta_frames+"/"+solo_nombre+".jpg")
+    print("borrando!")
+    url_frame=ruta_frames+"/"+solo_nombre+".jpg"
+    os.remove(url_frame)
 
 def procesar(config):
     global model
