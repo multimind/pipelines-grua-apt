@@ -174,6 +174,8 @@ def procesar(config):
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
     
     model = YOLO(config.get("PESOS","ruta"))
+    print("contexto!")
+    print(config["CONTEXTO"]["contexto"])
     model.model.to(config["CONTEXTO"]["contexto"])
     
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
