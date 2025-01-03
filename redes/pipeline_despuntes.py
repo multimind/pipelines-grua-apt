@@ -182,7 +182,8 @@ def calcular_despuntes():
         grupo_eliminado=grupos.pop(0) # elimina el grupo anterior
         nombre=grupo_eliminado.solo_nombre
 
-        os.remove(ruta_boxes+"/"+nombre)
+        if os.path.exists(ruta_boxes+"/"+nombre):
+            os.remove(ruta_boxes+"/"+nombre)
 
         nombre=nombre.replace(".txt","")
 
