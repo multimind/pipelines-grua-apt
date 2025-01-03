@@ -159,7 +159,9 @@ def calcular_despuntes():
 
         if os.path.exists(ruta_frames+"/"+nombre):
             os.remove(ruta_frames+"/"+nombre)
-        os.remove(ruta_pintadas+"/"+nombre)
+        
+        if os.path.exists(ruta_pintadas+"/"+nombre):
+            os.remove(ruta_pintadas+"/"+nombre)
         
         return
 
@@ -189,7 +191,9 @@ def calcular_despuntes():
 
         if os.path.exists(ruta_frames+"/"+nombre):
             os.remove(ruta_frames+"/"+nombre)
-        os.remove(ruta_pintadas+"/"+nombre)
+
+        if os.path.exists(ruta_pintadas+"/"+nombre):
+            os.remove(ruta_pintadas+"/"+nombre)
 
         return    
 
