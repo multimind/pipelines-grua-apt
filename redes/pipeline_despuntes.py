@@ -126,6 +126,9 @@ def analizar_box(url_box):
 def calcular_despuntes():
 
     global grupos
+    global ruta_pintadas
+    global ruta_frames
+    global ruta_boxes
 
     print("numero de despuntes")
     print(len(grupos))
@@ -146,7 +149,18 @@ def calcular_despuntes():
 
     if segundos>5:
         print("mas de 5 segundos, se elimina la conexion anterior!")
-        grupos.pop(0) # elimina el grupo anterior
+        grupo_eliminado=grupos.pop(0) # elimina el grupo anterior
+
+        nombre=grupo_eliminado.solo_nombre
+        
+        os.remove(ruta_boxes+"/"+nombre)
+
+        nombre=nombre.replace(".txt","")
+
+        if os.path.exists(ruta_frames+"/"+nombre):
+            os.remove(ruta_frames+"/"+nombre)
+        os.remove(ruta_pintadas+"/"+nombre)
+        
         return
 
     hay_conexion=False
@@ -165,10 +179,18 @@ def calcular_despuntes():
         
     if hay_conexion==False:
         print("sin conexiones!")
-        grupos.pop(0) # elimina el grupo anterior
+        grupo_eliminado=grupos.pop(0) # elimina el grupo anterior
+        nombre=grupo_eliminado.solo_nombre
+
+        os.remove(ruta_boxes+"/"+nombre)
+
+        nombre=nombre.replace(".txt","")
+
+        if os.path.exists(ruta_frames+"/"+nombre):
+            os.remove(ruta_frames+"/"+nombre)
+        os.remove(ruta_pintadas+"/"+nombre)
+
         return    
-
-
 
 def calcular_alertas():
     global grupos
@@ -186,6 +208,9 @@ def calcular_alertas():
 
         ruta_imagen=ruta_pintadas+"/"+solo_nombre
 
+        print("ruta alerta")
+        print(ruta_imagen)
+
         if os.path.isfile(ruta_imagen):
             archivo = open(ruta_imagen,'rb')
                             
@@ -199,6 +224,9 @@ def calcular_alertas():
             response = requests.post(url,files=files,data=values)
 
             archivo.close()
+            print("enviada!!!!")
+        else:
+            print("sin envio!")
 
     
 # Callback for handling messages
@@ -244,6 +272,7 @@ def procesar(config):
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     ruta_tiles=config["PROCESAMIENTO"]["ruta_tiles"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
+    ruta_frames=config["PROCESAMIENTO"]["ruta_frames"]
    
     url_telegram=config["TELEGRAM"]["url_telegram"]
     canal_id=config["TELEGRAM"]["canal_id"]

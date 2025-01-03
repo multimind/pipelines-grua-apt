@@ -10,7 +10,7 @@ from ultralytics import YOLO
 import torch
 import logging
 import argparse
-from PIL import Image,ImageDraw
+from PIL import Image,ImageDraw,ImageFont
 
 model=None
 nombre_canal=None
@@ -33,6 +33,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
     count = 0
 
     hay_despunte=False
+    hay_trabajador=False
 
     detecciones=[]
 
@@ -63,21 +64,34 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
                 x2=box[2]
                 y2=box[3]
 
-                if y1 < 250 and y2 < 250:
-                    continue
-
                 string_deteccion = str(clase)+','+str(int(x1))+","+str(int(y1))+","+str(int(x2))+","+str(int(y2))+","+str(parte_entera)+","+str(parte_fraccional)
-                detecciones.append(string_deteccion)
-
+               
                 outline="white"
                 if clase=="despunte":
                     outline="yellow"
                 elif clase=="trabajador":
                     outline="blue"
+
+                text = clase+": "+str(int(confidence*100))+"%"
+                font = ImageFont.truetype("Roboto-Regular.ttf", size=20)
+
+                y_mensaje = y1
                 
+                delta_y=30
+
+                if y1-delta_y>0:
+                    y_mensaje=y1-delta_y
+
+                position = (x1, y_mensaje)  
+                draw.text(position, text, fill=outline, font=font)
+
                 draw.rectangle((x1,y1,x2,y2), outline = outline ,width=5)
 
-                hay_despunte=True
+                if clase=="despunte":
+                    detecciones.append(string_deteccion)
+                    hay_despunte=True
+                elif clase=="trabajador":
+                    hay_trabajador=True
             
             image.paste(patch, coordenadas_crop)
 
@@ -98,6 +112,10 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
         f.close() 
 
         channel.basic_publish(exchange='', routing_key="posible_alerta_despuntes", body=ruta_full_boxes)
+    elif hay_trabajador:
+        #lanzar alerta para el otro procesamiento de trabajadores en zona
+        pass
+
     else:
         print("sin despunte: "+image_path)
         os.remove(image_path)
