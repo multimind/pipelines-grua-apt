@@ -33,6 +33,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
     count = 0
 
     hay_despunte=False
+    hay_despunte_grande=False
     hay_trabajador=False
 
     detecciones=[]
@@ -53,11 +54,13 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
             for box in boxes:
                 class_id = box[-1]
                 confidence = box[4]
-
-                if confidence<0.8:
-                    continue
-
+                
                 clase=str(classes.get(int(class_id)))
+
+                if confidence<0.7:
+                    print("descarto: "+clase)
+                    print("probabilidad: "+str(confidence))
+                    continue
 
                 x1=box[0]
                 y1=box[1]
@@ -66,11 +69,15 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
 
                 string_deteccion = str(clase)+','+str(int(x1))+","+str(int(y1))+","+str(int(x2))+","+str(int(y2))+","+str(parte_entera)+","+str(parte_fraccional)
                
+                print("clase!")
+                print(clase)
                 outline="white"
                 if clase=="despunte":
                     outline="yellow"
                 elif clase=="trabajador":
                     outline="blue"
+                elif clase=="despunte-grande":
+                    outline="red"
 
                 text = clase+": "+str(int(confidence*100))+"%"
                 font = ImageFont.truetype("Roboto-Regular.ttf", size=20)
@@ -92,10 +99,22 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
                     hay_despunte=True
                 elif clase=="trabajador":
                     hay_trabajador=True
+                elif clase=="despunte-grande":
+                    hay_despunte_grande=True
+                    detecciones.append(string_deteccion)
             
             image.paste(patch, coordenadas_crop)
 
-    if hay_despunte:
+    if hay_despunte_grande:
+        print("CON despunte: "+image_path)
+        solo_nombre = os.path.basename(image_path)
+
+        ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
+        image.save(ruta_full_pintada)
+    
+        channel.basic_publish(exchange='', routing_key="alerta_despunte_grande", body=ruta_full_pintada)
+
+    elif hay_despunte:
         print("CON despunte: "+image_path)
         solo_nombre = os.path.basename(image_path)
 
@@ -110,7 +129,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
             f.write(deteccion+"\n")
     
         f.close() 
-
+ 
         channel.basic_publish(exchange='', routing_key="posible_alerta_despuntes", body=ruta_full_boxes)
     elif hay_trabajador:
         #lanzar alerta para el otro procesamiento de trabajadores en zona

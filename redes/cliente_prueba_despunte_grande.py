@@ -1,9 +1,9 @@
 import pika
 import shutil
 
-ruta_base="/home/gonzalo/sm/yolo_despuntes/qa"
+ruta_base="/home/gonzalo/sm/yolo_despuntes/qa/alerta_grande"
 
-imagenes=["1735936153_61937_2688_1520.jpg","1735936168_639607_2688_1520.jpg"]
+imagenes=["1735986747_358206_2688_1520.jpg"]
 
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
@@ -18,5 +18,5 @@ for imagen in imagenes:
 
     shutil.copy(ruta,ruta_copiada)
     
-    channel.basic_publish(exchange='', routing_key="imagen_despuntes", body=ruta_copiada)
+    channel.basic_publish(exchange='', routing_key="alerta_despunte_grande", body=ruta_copiada)
     i=input()
