@@ -48,23 +48,35 @@ class Despunte:
 
         return (cx,cy)
 
+    #revisda si el actual corresponde al anterior mas un movimiento en el eje y
     def esta_conectado_con(self,anterior):
         cx,cy=self.centro()
 
         anterior_cx,anterior_cy=anterior.centro()
 
-        distancia = math.sqrt((cx - anterior_cx)**2 + (cy - anterior_cy)**2)
+        print("actual")
+        print(cx,cy)
 
-        print("distancia")
-        print(distancia)
+        print("anterior")
+        print(anterior_cx,anterior_cy)
 
-        if distancia >30:
+        delta=25
+
+        # verifica que este en la misma columna!
+        if cx>anterior_cx-delta and cx<anterior_cx+delta:
+
+            delta_y= cy - anterior_cy
+
+            # se ha desplazado en el eje y
+            if delta_y >= 10:
+                return True
+
+        else:
+            print("en columnas distintas")
             return False
 
-        if cy>anterior_cy:
-            return False
+        return False
 
-        return True
 
 class GrupoDespuntes:
     def __init__(self, despuntes, timestamp):
@@ -217,18 +229,19 @@ def calcular_alertas():
         print(ruta_imagen)
 
         if os.path.isfile(ruta_imagen):
-            archivo = open(ruta_imagen,'rb')
+            # archivo = open(ruta_imagen,'rb')
                             
-            mensaje="despunte"
+            # mensaje="despunte"
                             
-            url = url_telegram + "/sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
+            # url = url_telegram + "/sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
 
-            files={'photo': archivo}
-            values={'upload_file' : ruta_pintadas+"/"+solo_nombre, 'mimetype':'image/jpg','caption':mensaje }
+            # files={'photo': archivo}
+            # values={'upload_file' : ruta_pintadas+"/"+solo_nombre, 'mimetype':'image/jpg','caption':mensaje }
 
-            response = requests.post(url,files=files,data=values)
+            # response = requests.post(url,files=files,data=values)
 
-            archivo.close()
+            # archivo.close()
+            print("ALERTA SIMULADA!!!!!!!!!!!!!!!!!!")
             print("enviada!!!!")
         else:
             print("sin envio!")
