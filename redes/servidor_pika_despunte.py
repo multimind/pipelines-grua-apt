@@ -64,7 +64,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
                 
                 clase=str(classes.get(int(class_id)))
 
-                if confidence<0.5:
+                if confidence<0.75:
                     print("descarto: "+clase)
                     print("probabilidad: "+str(confidence))
                     continue

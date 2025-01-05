@@ -233,19 +233,19 @@ def calcular_alertas():
         print(ruta_imagen)
 
         if os.path.isfile(ruta_imagen):
-            # archivo = open(ruta_imagen,'rb')
+            archivo = open(ruta_imagen,'rb')
                             
-            # mensaje="despunte"
+            mensaje="despunte"
                             
-            # url = url_telegram + "/sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
+            url = url_telegram + "/sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
 
-            # files={'photo': archivo}
-            # values={'upload_file' : ruta_pintadas+"/"+solo_nombre, 'mimetype':'image/jpg','caption':mensaje }
+            files={'photo': archivo}
+            values={'upload_file' : ruta_pintadas+"/"+solo_nombre, 'mimetype':'image/jpg','caption':mensaje }
 
-            # response = requests.post(url,files=files,data=values)
+            response = requests.post(url,files=files,data=values)
 
-            # archivo.close()
-            print("ALERTA SIMULADA!!!!!!!!!!!!!!!!!!")
+            archivo.close()
+            
             print("enviada!!!!")
         else:
             print("sin envio!")
