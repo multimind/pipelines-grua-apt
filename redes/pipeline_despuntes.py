@@ -192,7 +192,7 @@ def calcular_despuntes():
                 print("desconectado!!!")
         
     if hay_conexion==False:
-        print("sin conexiones!")
+        print("sin conexiones!, eliminando!")
         grupo_eliminado=grupos.pop(0) # elimina el grupo anterior
         nombre=grupo_eliminado.solo_nombre
 
@@ -201,8 +201,12 @@ def calcular_despuntes():
 
         nombre=nombre.replace(".txt","")
 
-        if os.path.exists(ruta_frames+"/"+nombre):
-            os.remove(ruta_frames+"/"+nombre)
+        archivo_frame=ruta_frames+"/"+nombre
+        print("borrando: "+archivo_frame)
+        if os.path.exists(archivo_frame):
+            os.remove(archivo_frame)
+        else:
+            print("no se puede borrar: "+archivo_frame)
 
         if os.path.exists(ruta_pintadas+"/"+nombre):
             os.remove(ruta_pintadas+"/"+nombre)
