@@ -246,6 +246,7 @@ def callback(ch, method, properties, body):
 
     if not os.path.isfile(url_box):
         print("archivo no existe: "+url_box)
+        ch.basic_ack(delivery_tag=method.delivery_tag)
     else:
         if url_box.endswith(".txt"):
             analizar_box(url_box)
@@ -253,11 +254,11 @@ def callback(ch, method, properties, body):
             calcular_despuntes()
             calcular_alertas()
 
-    print("borrando!")
-    url_frame=ruta_frames+"/"+solo_nombre
+    #print("borrando!")
+    #url_frame=ruta_frames+"/"+solo_nombre
 
-    if os.path.exists(url_frame):
-        os.remove(url_frame)
+    #if os.path.exists(url_frame):
+    #    os.remove(url_frame)
 
 def procesar(config):
     global model

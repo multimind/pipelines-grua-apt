@@ -96,6 +96,7 @@ def callback(ch, method, properties, body):
 
     if not os.path.isfile(url_despunte):
         print("archivo no existe: "+url_despunte)
+        ch.basic_ack(delivery_tag=method.delivery_tag)
     else:
         if url_despunte.endswith(".jpg"):
             enviar_alertas(url_despunte)

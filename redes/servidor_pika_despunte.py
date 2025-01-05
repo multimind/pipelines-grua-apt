@@ -42,6 +42,9 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
 
     detecciones=[]
 
+    mensajes_full=[]
+    rectangulos_full=[]
+
     for y in range(0, img_height, patch_height):
         for x in range(0, img_width, patch_width):
            
@@ -53,7 +56,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
 
             boxes = results.boxes.data.tolist()
 
-            draw = ImageDraw.Draw(patch)
+            #draw = ImageDraw.Draw(patch)
             
             for box in boxes:
                 class_id = box[-1]
@@ -61,7 +64,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
                 
                 clase=str(classes.get(int(class_id)))
 
-                if confidence<0.7:
+                if confidence<0.5:
                     print("descarto: "+clase)
                     print("probabilidad: "+str(confidence))
                     continue
@@ -94,9 +97,12 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
                     y_mensaje=y1-delta_y
 
                 position = (x1, y_mensaje)  
-                draw.text(position, text, fill=outline, font=font)
 
-                draw.rectangle((x1,y1,x2,y2), outline = outline ,width=5)
+                position_full=(x1+x,y_mensaje+y)
+
+                mensajes_full.append((position_full,text,outline))
+
+                rectangulos_full.append((x+x1,y+y1,x+x2,y+y2,outline))
 
                 if clase=="despunte":
                     detecciones.append(string_deteccion)
@@ -107,7 +113,17 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
                     hay_despunte_grande=True
                     detecciones.append(string_deteccion)
             
-            image.paste(patch, coordenadas_crop)
+            #image.paste(patch, coordenadas_crop)
+
+    #pinta en coordenadas globales    
+    if hay_despunte or hay_despunte_grande or hay_trabajador:
+        draw = ImageDraw.Draw(image)
+
+        for mensaje in mensajes_full:
+            draw.text(mensaje[0],mensaje[1],fill=mensaje[2],font=font)        
+
+        for rectangulo in rectangulos_full:
+            draw.rectangle((rectangulo[0],rectangulo[1],rectangulo[2],rectangulo[3]), outline = rectangulo[4] ,width=5)
 
     if hay_despunte_grande:
         print("CON despunte: "+image_path)
@@ -135,6 +151,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
         f.close() 
  
         channel.basic_publish(exchange='', routing_key="posible_alerta_despuntes", body=ruta_full_boxes)
+
     elif hay_trabajador:
         #lanzar alerta para el otro procesamiento de trabajadores en zona
         solo_nombre = os.path.basename(image_path)
