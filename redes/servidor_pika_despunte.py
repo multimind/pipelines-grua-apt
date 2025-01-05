@@ -11,6 +11,7 @@ import torch
 import logging
 import argparse
 from PIL import Image,ImageDraw,ImageFont
+import shutil
 
 model=None
 nombre_canal=None
@@ -18,11 +19,14 @@ nombre_canal=None
 ruta_boxes=None
 ruta_tiles=None
 ruta_pintadas=None
+ruta_trabajadores=None
 
 channel=None
  
 def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,parte_fraccional):
     global channel
+    global ruta_trabajadores
+
     image = Image.open(image_path)
  
     img_width, img_height = image.size
@@ -133,8 +137,10 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
         channel.basic_publish(exchange='', routing_key="posible_alerta_despuntes", body=ruta_full_boxes)
     elif hay_trabajador:
         #lanzar alerta para el otro procesamiento de trabajadores en zona
-        pass
-
+        solo_nombre = os.path.basename(image_path)
+        ruta_full_trabajadores=ruta_trabajadores+"/"+solo_nombre
+        #mueve la original a otra ruta
+        shutil.move(image_path,ruta_full_trabajadores)
     else:
         print("sin despunte: "+image_path)
         os.remove(image_path)
@@ -163,7 +169,6 @@ def inferir_imagen(nombre_imagen, model):
     patch_size = (640, 640)  
     nombres_tiles=save_image_patches(nombre_imagen,patch_size,ruta_tiles,model, parte_entera, parte_fraccional)
     
-# Callback for handling messages
 def callback(ch, method, properties, body):
     global model
     print(f"Received: {body.decode()}")
@@ -184,6 +189,7 @@ def procesar(config):
     global ruta_boxes
     global ruta_tiles
     global ruta_pintadas
+    global ruta_trabajadores
     global channel
 
     nombre_canal=config["PROCESAMIENTO"]["nombre_canal"]
@@ -191,10 +197,10 @@ def procesar(config):
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     ruta_tiles=config["PROCESAMIENTO"]["ruta_tiles"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
+    ruta_trabajadores=config["PROCESAMIENTO"]["ruta_trabajadores"]
     
     model = YOLO(config.get("PESOS","ruta"))
-    print("contexto!")
-    print(config["CONTEXTO"]["contexto"])
+    
     model.model.to(config["CONTEXTO"]["contexto"])
     
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
