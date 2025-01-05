@@ -221,7 +221,7 @@ def calcular_alertas():
                             
             mensaje="despunte"
                             
-            url = url_telegram + "sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
+            url = url_telegram + "/sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
 
             files={'photo': archivo}
             values={'upload_file' : ruta_pintadas+"/"+solo_nombre, 'mimetype':'image/jpg','caption':mensaje }
