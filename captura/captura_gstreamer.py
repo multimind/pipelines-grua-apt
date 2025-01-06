@@ -23,6 +23,7 @@ nombre_canal=None
 def on_new_sample(sink,user_data):
     global ruta_frames
     global STATUS_FILE
+    global nombre_canal
     
     print("==inicio")
     channel=user_data
@@ -97,7 +98,7 @@ def on_new_sample(sink,user_data):
         image.save(nombre_final)
 
         print("antes de publicar!!!")
-        channel.basic_publish(exchange='', routing_key='imagen_grua_apt', body=nombre_final)
+        channel.basic_publish(exchange='', routing_key=nombre_canal, body=nombre_final)
         print("publicado!")
     
     except pika.exceptions.UnroutableError as e:
@@ -122,11 +123,12 @@ def main(config):
     global ruta_frames
     global nombre_canal
     global STATUS_FILE
-
+    
     ruta_frames=config["CAPTURA"]["ruta_frames"]
-    nombre_canal=config["CAPTURA"]["nombre_canal"]
     STATUS_FILE=config["CAPTURA"]["archivo_notificacion_servicio_systemd"]
-
+  
+    nombre_canal=config["RABBIT"]["nombre_cola"]
+    
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
     channel.queue_declare(queue=nombre_canal)
