@@ -211,7 +211,10 @@ def calcular_despuntes():
         if os.path.exists(ruta_pintadas+"/"+nombre):
             os.remove(ruta_pintadas+"/"+nombre)
 
-        return    
+    else:
+        print("elimina anterior!")
+        grupo_eliminado=grupos.pop(0) # elimina el grupo anterior
+        nombre=grupo_eliminado.solo_nombre
 
 def calcular_alertas():
     global grupos
