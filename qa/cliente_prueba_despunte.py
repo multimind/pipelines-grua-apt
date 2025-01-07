@@ -21,6 +21,8 @@ def procesar(config):
 
     for imagen in imagenes:
         
+        imagen=imagen.strip()
+
         ruta=ruta_base+"/"+imagen
 
         ruta_copiada="/home/gonzalo/sm/pipelines-grua-apt/qa/casos/temporal/"+imagen

@@ -26,6 +26,11 @@ canal_id=None
 channel=None
 grupos=[]
 
+estado="SIN_DESPUNTES"
+
+primer_grupo=None
+segundo_grupo=None
+
 def reconstruct_timestamp(integer_part, fractional_part):
     timestamp = float(integer_part) + int(fractional_part) / 1_000_000
     reconstructed_datetime = datetime.datetime.fromtimestamp(timestamp)
@@ -68,8 +73,10 @@ class Despunte:
             delta_y= cy - anterior_cy
 
             # se ha desplazado en el eje y
-            if delta_y >= 10:
+            if abs(delta_y) >= 10:
                 return True
+            else:
+                print("distancia en y incorrecta!!!")
 
         else:
             print("en columnas distintas")
@@ -98,9 +105,11 @@ def log_setup(path, level):
     logger.addHandler(handler)
     logger.setLevel(level)
     
-def analizar_box(url_box):
+def buscar_despuntes(url_box):
     global ruta_boxes
     global grupos
+
+    grupo_despuntes=GrupoDespuntes([],[])
     
     f = open(url_box, "r")
     boxes = f.readlines()
@@ -115,10 +124,10 @@ def analizar_box(url_box):
 
     timestamp=reconstruct_timestamp(parte_entera,parte_flotante)
 
-    grupo_despuntes=GrupoDespuntes([],[])
     grupo_despuntes.solo_nombre=solo_nombre
-
     grupo_despuntes.timestamp=timestamp
+
+    hay_despuntes=False
 
     for box in boxes:
         partes=box.split(",")
@@ -131,9 +140,9 @@ def analizar_box(url_box):
 
         despunte=Despunte(timestamp,clase,x1,y1,x2,y2)
         grupo_despuntes.despuntes.append(despunte)
+        hay_despuntes=True
 
-    grupos.append(grupo_despuntes)
-
+    return hay_despuntes, grupo_despuntes
 
 def calcular_despuntes():
 
@@ -141,6 +150,7 @@ def calcular_despuntes():
     global ruta_pintadas
     global ruta_frames
     global ruta_boxes
+    global estado
 
     print("numero de despuntes")
     print(len(grupos))
@@ -184,17 +194,19 @@ def calcular_despuntes():
         for despunte_anterior in grupo_anterior.despuntes:
 
             if despunte_actual.conexion == None and despunte_actual.esta_conectado_con(despunte_anterior):
-                print("conectados!!!")
+                print("conectando!!!!!!!!!!!!!!!!!1dos!!!")
                 despunte_actual.conexion=despunte_anterior
                 #grupo_despuntes.alerta=1
                 hay_conexion=True
             else:
                 print("desconectado!!!")
         
-    if hay_conexion==False:
+    if hay_conexion==True:
+        pass
+    else:
         print("sin conexiones!, eliminando!")
-        grupo_eliminado=grupos.pop(0) # elimina el grupo anterior
-        nombre=grupo_eliminado.solo_nombre
+
+        nombre=grupos[-1].solo_nombre
 
         if os.path.exists(ruta_boxes+"/"+nombre):
             os.remove(ruta_boxes+"/"+nombre)
@@ -203,60 +215,158 @@ def calcular_despuntes():
 
         archivo_frame=ruta_frames+"/"+nombre
         print("borrando: "+archivo_frame)
+        
         if os.path.exists(archivo_frame):
-            os.remove(archivo_frame)
-        else:
-            print("no se puede borrar: "+archivo_frame)
+        #     os.remove(archivo_frame)
+        # else:
+        #     print("no se puede borrar: "+archivo_frame)
 
-        if os.path.exists(ruta_pintadas+"/"+nombre):
-            os.remove(ruta_pintadas+"/"+nombre)
+        # if os.path.exists(ruta_pintadas+"/"+nombre):
+        #     os.remove(ruta_pintadas+"/"+nombre)
 
-    else:
-        print("elimina anterior!")
-        grupo_eliminado=grupos.pop(0) # elimina el grupo anterior
-        nombre=grupo_eliminado.solo_nombre
+        grupos = grupos[-1:]
+
+
+
+    #else:
+    #    print("elimina anterior!")
+    #    #grupo_eliminado=grupos.pop(0) # elimina el grupo anterior
+    #    #nombre=grupo_eliminado.solo_nombre
 
 def calcular_alertas():
+   
+    
+    print("numero de grupoas en calcular alertas!!!")
+    print(len(grupos))
+    
+    if len(grupos)==2:
+        print("ALERTA!!!!")
+
+
+def detectar_movimiento_despunte(primer_grupo,segundo_grupo):
+
+    global grupos
+    global ruta_pintadas
+    global ruta_frames
+    global ruta_boxes
+    global estado
+
+    print("numero de despuntes")
+    print(len(grupos))
+
+    if len(grupos)<=1:
+        return
+
+    grupo_anterior=primer_grupo
+    grupo_actual=segundo_grupo
+
+    grupo_anterior.eliminar=False
+
+    indice_corto_circuito=None
+       
+    delta=grupo_actual.timestamp-grupo_anterior.timestamp
+
+    segundos=delta.total_seconds()
+
+    if segundos>5:
+        print("mas de 5 segundos, se elimina la conexion anterior!")
+        grupo_eliminado=grupos.pop(0) # elimina el grupo anterior
+
+        nombre=grupo_eliminado.solo_nombre
+        
+        os.remove(ruta_boxes+"/"+nombre)
+
+        nombre=nombre.replace(".txt","")
+
+        if os.path.exists(ruta_frames+"/"+nombre):
+            os.remove(ruta_frames+"/"+nombre)
+        
+        if os.path.exists(ruta_pintadas+"/"+nombre):
+            os.remove(ruta_pintadas+"/"+nombre)
+        
+        return False
+
+    hay_conexion=False
+        
+    for despunte_actual in grupo_actual.despuntes:
+
+        for despunte_anterior in grupo_anterior.despuntes:
+
+            if despunte_actual.conexion == None and despunte_actual.esta_conectado_con(despunte_anterior):
+                print("conectando!!!!!!!!!!!!!!!!!1dos!!!")
+                despunte_actual.conexion=despunte_anterior
+                #grupo_despuntes.alerta=1
+                hay_conexion=True
+            else:
+                print("desconectado!!!")
+        
+    if hay_conexion==True:
+        return True
+    else:
+        print("sin conexiones!, eliminando!")
+
+        nombre=grupos[-1].solo_nombre
+
+        if os.path.exists(ruta_boxes+"/"+nombre):
+            os.remove(ruta_boxes+"/"+nombre)
+
+        nombre=nombre.replace(".txt","")
+
+        archivo_frame=ruta_frames+"/"+nombre
+        print("borrando: "+archivo_frame)
+        
+        # if os.path.exists(archivo_frame):
+        # #     os.remove(archivo_frame)
+        # # else:
+        # #     print("no se puede borrar: "+archivo_frame)
+
+        # # if os.path.exists(ruta_pintadas+"/"+nombre):
+        # #     os.remove(ruta_pintadas+"/"+nombre)
+
+        # grupos = grupos[-1:]
+        return False
+     
+        
+def enviar_alerta(grupo):
     global grupos
     global ruta_pintadas
 
     global url_telegram
     global canal_id
-    
-    if len(grupos)==2:
-        print("ALERTA!!!!")
+    global estado
 
-        grupo=grupos[0]
-        solo_nombre=grupo.solo_nombre
-        solo_nombre=solo_nombre.replace(".txt","")
+    solo_nombre=grupo.solo_nombre
+    solo_nombre=solo_nombre.replace(".txt","")
 
-        ruta_imagen=ruta_pintadas+"/"+solo_nombre
+    ruta_imagen=ruta_pintadas+"/"+solo_nombre
 
-        print("ruta alerta")
-        print(ruta_imagen)
+    print("ruta alerta")
+    print(ruta_imagen)
 
-        if os.path.isfile(ruta_imagen):
-            archivo = open(ruta_imagen,'rb')
+    if os.path.isfile(ruta_imagen):
+        archivo = open(ruta_imagen,'rb')
                             
-            mensaje="despunte"
+        mensaje="despunte"
                             
-            url = url_telegram + "/sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
+        url = url_telegram + "/sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
 
-            files={'photo': archivo}
-            values={'upload_file' : ruta_pintadas+"/"+solo_nombre, 'mimetype':'image/jpg','caption':mensaje }
+        files={'photo': archivo}
+        values={'upload_file' : ruta_pintadas+"/"+solo_nombre, 'mimetype':'image/jpg','caption':mensaje }
 
-            response = requests.post(url,files=files,data=values)
+        response = requests.post(url,files=files,data=values)
 
-            archivo.close()
+        archivo.close()
             
-            print("enviada!!!!")
-        else:
-            print("sin envio!")
+        print("enviada!!!!")
+    else:
+        print("sin envio!")
 
     
 # Callback for handling messages
 def callback(ch, method, properties, body):
     global ruta_frames
+    global estado
+
     print(f"Received: {body.decode()}")
 
     url_box=body.decode()
@@ -269,17 +379,58 @@ def callback(ch, method, properties, body):
         ch.basic_ack(delivery_tag=method.delivery_tag)
     else:
         if url_box.endswith(".txt"):
-            analizar_box(url_box)
+            hay_despuntes,grupo_despuntes=buscar_despuntes(url_box)
             ch.basic_ack(delivery_tag=method.delivery_tag)
-            calcular_despuntes()
-            calcular_alertas()
+            
+            if estado=="SIN_DESPUNTES":
 
-    #print("borrando!")
-    #url_frame=ruta_frames+"/"+solo_nombre
+                if not hay_despuntes:
+                    estado="SIN_DESPUNTES"
+                    primer_grupo=None
+                    segundo_grupo=None
+                else:
+                    estado="PRIMER_DESPUNTE"
+                    primer_grupo=grupo_despuntes
 
-    #if os.path.exists(url_frame):
-    #    os.remove(url_frame)
+            elif estado=="PRIMER_DESPUNTE":
 
+                if not hay_despuntes:
+                    estado="SIN_DESPUNTES"
+                    primer_grupo=None
+                    segundo_grupo=None
+                else:
+
+                    hay_movimiento = detectar_movimiento_despunte(grupo_despuntes,primer_grupo)
+                    
+                    if not hay_movimiento:
+                        #borrar anterior
+                        primer_grupo=grupo_despuntes
+                        segundo_grupo=None
+                        estado="PRIMER_DESPUNTE"
+                    else:
+
+                        #enviar alerta 
+                        enviar_alerta(primer_grupo)
+                        estado="CONTINUA_DESPUNTE"
+                
+            elif estado=="CONTINUA_DESPUNTE":
+
+                hay_movimiento = detectar_movimiento_despunte(grupo_despuntes,primer_grupo)
+
+                if not hay_despuntes:
+                    estado="SIN_DESPUNTES"
+                    primer_grupo=None
+                    segundo_grupo=None
+                elif hay_movimiento:
+                    estado="CONTINUA_DESPUNTE"
+                    #borrar anterior
+                    primer_grupo=grupo_despuntes
+                elif not hay_movimiento:
+                    estado="PRIMER_DESPUNTE"
+                    #borrar
+                    primer_grupo=grupo_despuntes
+
+           
 def procesar(config):
     global model
     global nombre_canal
