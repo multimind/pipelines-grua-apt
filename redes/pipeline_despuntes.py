@@ -352,6 +352,39 @@ def enviar_alerta(grupo):
     else:
         print("sin envio!")
 
+def borrar_imagen(url_box):
+    global ruta_frames
+    global ruta_boxes
+
+    os.remove(url_box)
+
+    solo_nombre=os.path.basename(url_box)
+    solo_nombre=solo_nombre.replace(".txt","")
+
+    if os.path.exists(ruta_frames+"/"+solo_nombre):
+        os.remove(ruta_frames+"/"+solo_nombre)
+
+def borrar_grupo(grupo):
+    global ruta_frames
+    global ruta_boxes
+    global ruta_pintadas
+
+    nombre=grupo.solo_nombre
+
+    if os.path.exists(ruta_boxes+"/"+nombre):
+        os.remove(ruta_boxes+"/"+nombre)
+
+    nombre=nombre.replace(".txt","")
+
+    archivo_frame=ruta_frames+"/"+nombre
+        
+    if os.path.exists(archivo_frame):
+        os.remove(archivo_frame)
+    else:
+        print("no se puede borrar: "+archivo_frame)
+
+    if os.path.exists(ruta_pintadas+"/"+nombre):
+        os.remove(ruta_pintadas+"/"+nombre)
     
 # Callback for handling messages
 def callback(ch, method, properties, body):
@@ -376,11 +409,13 @@ def callback(ch, method, properties, body):
         if url_box.endswith(".txt"):
             hay_despuntes,grupo_despuntes=buscar_despuntes(url_box)
             ch.basic_ack(delivery_tag=method.delivery_tag)
-            
+
             if estado=="SIN_DESPUNTES":
 
                 if not hay_despuntes:
                     estado="SIN_DESPUNTES"
+                    borrar_imagen(url_box)
+
                     primer_grupo=None
                     segundo_grupo=None
                 else:
@@ -391,6 +426,8 @@ def callback(ch, method, properties, body):
 
                 if not hay_despuntes:
                     estado="SIN_DESPUNTES"
+                    borrar_grupo(primer_grupo)
+                    borrar_grupo(grupo_despuntes)
                     primer_grupo=None
                     segundo_grupo=None
                 else:
@@ -402,6 +439,7 @@ def callback(ch, method, properties, body):
 
                     if not hay_movimiento:
                         #borrar anterior
+                        borrar_grupo(primer_grupo)
                         primer_grupo=grupo_despuntes
                         segundo_grupo=None
                         estado="PRIMER_DESPUNTE"
@@ -417,6 +455,8 @@ def callback(ch, method, properties, body):
 
                 if not hay_despuntes:
                     estado="SIN_DESPUNTES"
+                    borrar_grupo(primer_grupo)
+                    borrar_grupo(grupo_despuntes)
                     primer_grupo=None
                     segundo_grupo=None
                 elif hay_movimiento:
@@ -425,7 +465,8 @@ def callback(ch, method, properties, body):
                     primer_grupo=grupo_despuntes
                 elif not hay_movimiento:
                     estado="PRIMER_DESPUNTE"
-                    #borrar
+                    
+                    borrar_grupo(primer_grupo)
                     primer_grupo=grupo_despuntes
 
     print("--------- estado final: "+estado+" --------------")
