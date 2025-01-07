@@ -152,9 +152,6 @@ def calcular_despuntes():
     global ruta_boxes
     global estado
 
-    print("numero de despuntes")
-    print(len(grupos))
-
     if len(grupos)<=1:
         return
 
@@ -216,7 +213,7 @@ def calcular_despuntes():
         archivo_frame=ruta_frames+"/"+nombre
         print("borrando: "+archivo_frame)
         
-        if os.path.exists(archivo_frame):
+        #if os.path.exists(archivo_frame):
         #     os.remove(archivo_frame)
         # else:
         #     print("no se puede borrar: "+archivo_frame)
@@ -224,7 +221,7 @@ def calcular_despuntes():
         # if os.path.exists(ruta_pintadas+"/"+nombre):
         #     os.remove(ruta_pintadas+"/"+nombre)
 
-        grupos = grupos[-1:]
+        #grupos = grupos[-1:]
 
 
 
@@ -250,12 +247,6 @@ def detectar_movimiento_despunte(primer_grupo,segundo_grupo):
     global ruta_frames
     global ruta_boxes
     global estado
-
-    print("numero de despuntes")
-    print(len(grupos))
-
-    if len(grupos)<=1:
-        return
 
     grupo_anterior=primer_grupo
     grupo_actual=segundo_grupo
@@ -305,15 +296,15 @@ def detectar_movimiento_despunte(primer_grupo,segundo_grupo):
     else:
         print("sin conexiones!, eliminando!")
 
-        nombre=grupos[-1].solo_nombre
+        # nombre=grupos[-1].solo_nombre
 
-        if os.path.exists(ruta_boxes+"/"+nombre):
-            os.remove(ruta_boxes+"/"+nombre)
+        # if os.path.exists(ruta_boxes+"/"+nombre):
+        #     os.remove(ruta_boxes+"/"+nombre)
 
-        nombre=nombre.replace(".txt","")
+        # nombre=nombre.replace(".txt","")
 
-        archivo_frame=ruta_frames+"/"+nombre
-        print("borrando: "+archivo_frame)
+        # archivo_frame=ruta_frames+"/"+nombre
+        # print("borrando: "+archivo_frame)
         
         # if os.path.exists(archivo_frame):
         # #     os.remove(archivo_frame)
@@ -366,6 +357,7 @@ def enviar_alerta(grupo):
 def callback(ch, method, properties, body):
     global ruta_frames
     global estado
+    global primer_grupo
 
     print(f"Received: {body.decode()}")
 
@@ -373,6 +365,9 @@ def callback(ch, method, properties, body):
 
     solo_nombre=os.path.basename(url_box)
     solo_nombre=solo_nombre.replace(".txt","")
+
+    print("")
+    print("--------- estado inicial: "+estado+" --------------")
 
     if not os.path.isfile(url_box):
         print("archivo no existe: "+url_box)
@@ -402,6 +397,9 @@ def callback(ch, method, properties, body):
 
                     hay_movimiento = detectar_movimiento_despunte(grupo_despuntes,primer_grupo)
                     
+                    print("hay movimiento???")
+                    print(hay_movimiento)
+
                     if not hay_movimiento:
                         #borrar anterior
                         primer_grupo=grupo_despuntes
@@ -430,6 +428,7 @@ def callback(ch, method, properties, body):
                     #borrar
                     primer_grupo=grupo_despuntes
 
+    print("--------- estado final: "+estado+" --------------")
            
 def procesar(config):
     global model
