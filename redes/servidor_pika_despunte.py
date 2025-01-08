@@ -21,11 +21,16 @@ ruta_tiles=None
 ruta_pintadas=None
 ruta_trabajadores=None
 
+canal_posible_alerta=None
+canal_alerta_despunte_grande=None
+
 channel=None
  
 def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,parte_fraccional):
     global channel
     global ruta_trabajadores
+    global canal_posible_alerta
+    global canal_alerta_despunte_grande
 
     image = Image.open(image_path)
  
@@ -132,7 +137,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
         ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
         image.save(ruta_full_pintada)
     
-        channel.basic_publish(exchange='', routing_key="alerta_despunte_grande", body=ruta_full_pintada)
+        channel.basic_publish(exchange='', routing_key=canal_alerta_despunte_grande, body=ruta_full_pintada)
 
     elif hay_despunte:
         print("CON despunte: "+image_path)
@@ -150,7 +155,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
     
         f.close() 
  
-        channel.basic_publish(exchange='', routing_key="posible_alerta_despuntes", body=ruta_full_boxes)
+        channel.basic_publish(exchange='', routing_key=canal_posible_alerta, body=ruta_full_boxes)
 
     elif hay_trabajador:
         #lanzar alerta para el otro procesamiento de trabajadores en zona
@@ -209,12 +214,18 @@ def procesar(config):
     global ruta_trabajadores
     global channel
 
+    global canal_posible_alerta
+    global canal_alerta_despunte_grande
+
     nombre_canal=config["PROCESAMIENTO"]["nombre_canal"]
 
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     ruta_tiles=config["PROCESAMIENTO"]["ruta_tiles"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
     ruta_trabajadores=config["PROCESAMIENTO"]["ruta_trabajadores"]
+
+    canal_posible_alerta=config["RABBIT"]["canal_posible_alerta"]
+    canal_alerta_despunte_grande=config["RABBIT"]["canal_alerta_despunte_grande"]
     
     model = YOLO(config.get("PESOS","ruta"))
     
