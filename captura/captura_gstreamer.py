@@ -19,16 +19,23 @@ import configparser
 STATUS_FILE = None
 ruta_frames=None
 nombre_canal=None
+frameskip=None
+cuentaframe=0
 
 def on_new_sample(sink,user_data):
     global ruta_frames
     global STATUS_FILE
     global nombre_canal
+    global cuentaframe
     
-    print("==inicio")
     channel=user_data
 
     sample = sink.emit("pull-sample")
+
+    cuentaframe=cuentaframe+1
+    
+    if not cuentaframe>=frameskip:
+        return
 
     if not sample:
         print("error!!!!")
@@ -123,8 +130,10 @@ def main(config):
     global ruta_frames
     global nombre_canal
     global STATUS_FILE
+    global frameskip
     
     ruta_frames=config["CAPTURA"]["ruta_frames"]
+    frameskip=config["CAPTURA"]["frameskip"]
     STATUS_FILE=config["CAPTURA"]["archivo_notificacion_servicio_systemd"]
   
     nombre_canal=config["RABBIT"]["nombre_cola"]
