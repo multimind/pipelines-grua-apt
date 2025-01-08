@@ -217,15 +217,15 @@ def procesar(config):
     global canal_posible_alerta
     global canal_alerta_despunte_grande
 
-    nombre_canal=config["PROCESAMIENTO"]["nombre_canal"]
+    nombre_canal=config["RABBIT_ENTRADA"]["nombre_canal"]
 
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     ruta_tiles=config["PROCESAMIENTO"]["ruta_tiles"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
     ruta_trabajadores=config["PROCESAMIENTO"]["ruta_trabajadores"]
 
-    canal_posible_alerta=config["RABBIT"]["canal_posible_alerta"]
-    canal_alerta_despunte_grande=config["RABBIT"]["canal_alerta_despunte_grande"]
+    canal_posible_alerta=config["RABBIT_SALIDA"]["canal_posible_alerta"]
+    canal_alerta_despunte_grande=config["RABBIT_SALIDA"]["canal_alerta_despunte_grande"]
     
     model = YOLO(config.get("PESOS","ruta"))
     
