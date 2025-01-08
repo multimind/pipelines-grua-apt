@@ -162,7 +162,8 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
         solo_nombre = os.path.basename(image_path)
         ruta_full_trabajadores=ruta_trabajadores+"/"+solo_nombre
         #mueve la original a otra ruta
-        shutil.move(image_path,ruta_full_trabajadores)
+        #shutil.move(image_path,ruta_full_trabajadores)
+        os.remove(image_path)
     else:
         print("sin despunte: "+image_path)
         os.remove(image_path)
