@@ -35,7 +35,8 @@ def on_new_sample(sink,user_data):
     cuentaframe=cuentaframe+1
     
     if not cuentaframe>=frameskip:
-        return
+        return Gst.FlowReturn.OK
+
     cuentaframe=0
 
     if not sample:
