@@ -21,7 +21,7 @@ ruta_frames=None
 nombre_canal=None
 frameskip=None
 cuentaframe=0
-nombre_sink_gstreamer
+nombre_sink_gstreamer=None
 
 def on_new_sample(sink,user_data):
     global ruta_frames
