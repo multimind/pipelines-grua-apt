@@ -36,6 +36,7 @@ def on_new_sample(sink,user_data):
     
     if not cuentaframe>=frameskip:
         return
+    cuentaframe=0
 
     if not sample:
         print("error!!!!")
