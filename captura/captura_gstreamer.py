@@ -133,7 +133,7 @@ def main(config):
     global frameskip
     
     ruta_frames=config["CAPTURA"]["ruta_frames"]
-    frameskip=config["CAPTURA"]["frameskip"]
+    frameskip=int(config["CAPTURA"]["frameskip"])
     STATUS_FILE=config["CAPTURA"]["archivo_notificacion_servicio_systemd"]
   
     nombre_canal=config["RABBIT"]["nombre_cola"]
