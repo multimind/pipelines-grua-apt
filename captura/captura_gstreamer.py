@@ -133,7 +133,9 @@ def main(config):
     global nombre_canal
     global STATUS_FILE
     global frameskip
-    
+    global nombre_sink_gstreamer
+
+    nombre_sink_gstreamer=config["CAPTURA"]["nombre_sink_gstreamer"]
     ruta_frames=config["CAPTURA"]["ruta_frames"]
     frameskip=int(config["CAPTURA"]["frameskip"])
     STATUS_FILE=config["CAPTURA"]["archivo_notificacion_servicio_systemd"]
