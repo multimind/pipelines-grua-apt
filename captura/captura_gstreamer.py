@@ -21,6 +21,7 @@ ruta_frames=None
 nombre_canal=None
 frameskip=None
 cuentaframe=0
+nombre_sink_gstreamer
 
 def on_new_sample(sink,user_data):
     global ruta_frames
@@ -156,7 +157,9 @@ def main(config):
         config["CAPTURA"]["pipeline_gstreamer"]
     )
 
-    appsink = pipeline.get_by_name("sink")
+    print("nombre sink")
+    print(nombre_sink_gstreamer)
+    appsink = pipeline.get_by_name(nombre_sink_gstreamer)
 
     appsink.set_property("emit-signals", True)
     appsink.set_property("sync", False)
