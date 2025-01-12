@@ -23,6 +23,8 @@ canal_posible_alerta=None
 channel=None
 font=None
 
+threshold_deteccion=0.0
+
 def log_setup(path, level):
 
     if not os.path.isdir("logs/grua/"):
@@ -39,6 +41,7 @@ def inferir_imagen(nombre_imagen, model):
     global ruta_boxes
     global font
     global canal_posible_alerta
+    global threshold_deteccion
 
     solo_nombre = os.path.basename(nombre_imagen)
     solo_nombre = solo_nombre.replace(".jpg", "")
@@ -75,7 +78,7 @@ def inferir_imagen(nombre_imagen, model):
 
         clase=str(classes.get(int(class_id)))
 
-        if confidence<0.70:
+        if confidence<threshold_deteccion:
             print("descarto: "+clase)
             print("probabilidad: "+str(confidence))
             continue
@@ -87,7 +90,7 @@ def inferir_imagen(nombre_imagen, model):
 
         outline="white"
         if clase=="estructura_imanes":
-            outline="yellow"
+            outline="orange"
         elif clase=="trabajador":
             outline="blue"
 
@@ -106,7 +109,7 @@ def inferir_imagen(nombre_imagen, model):
 
         rectangulos_full.append((x1,y1,x2,y2,outline))
 
-        string_deteccion = str(clase)+','+str(int(x1))+","+str(int(y1))+","+str(int(x2))+","+str(int(y2))+","+str(parte_entera)+","+str(parte_fraccional)
+        string_deteccion = str(clase)+','+str(int(x1))+","+str(int(y1))+","+str(int(x2))+","+str(int(y2))+","+str(confidence)+","+str(parte_entera)+","+str(parte_fraccional)
 
         if clase=="trabajador":
             detecciones.append(string_deteccion)
@@ -136,6 +139,8 @@ def inferir_imagen(nombre_imagen, model):
             f.write(deteccion+"\n")
     
         f.close() 
+
+        print("alerta en: "+canal_posible_alerta)
  
         channel.basic_publish(exchange='', routing_key=canal_posible_alerta, body=ruta_full_boxes)
 
@@ -165,6 +170,7 @@ def procesar(config):
     global canal_posible_alerta
 
     global font 
+    global threshold_deteccion
     
     font= ImageFont.truetype("Roboto-Regular.ttf", size=20)
     
@@ -172,6 +178,7 @@ def procesar(config):
 
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
+    threshold_deteccion=float(config["PROCESAMIENTO"]["threshold_deteccion"])
     
     canal_posible_alerta=config["RABBIT_SALIDA"]["canal_posible_alerta"]
     

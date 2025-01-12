@@ -29,6 +29,7 @@ channel=None
 def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,parte_fraccional):
     global channel
     global ruta_trabajadores
+    global ruta_pintadas
     global canal_posible_alerta
     global canal_alerta_despunte_grande
 

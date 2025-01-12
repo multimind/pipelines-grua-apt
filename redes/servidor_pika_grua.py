@@ -14,6 +14,7 @@ import argparse
 model=None
 ruta_boxes=None
 nombre_canal=None
+threshold_deteccion=None
 
 def log_setup(path, level):
 
@@ -28,6 +29,8 @@ def log_setup(path, level):
     
 def inferir_imagen(nombre_imagen, model):
     global ruta_boxes
+    global threshold_deteccion
+
     solo_nombre = os.path.basename(nombre_imagen)
     solo_nombre = solo_nombre.replace(".jpg", "")
 
@@ -54,7 +57,7 @@ def inferir_imagen(nombre_imagen, model):
 
         confidence = box[4]
 
-        if confidence>0.8:
+        if confidence>threshold_deteccion:
             seleccionados.append(res)
 
     f = open(ruta_boxes+"/"+solo_nombre, "+w")
@@ -82,9 +85,11 @@ def procesar(config):
     global model
     global ruta_boxes
     global nombre_canal
+    global threshold_deteccion
 
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     nombre_canal=config["PROCESAMIENTO"]["nombre_canal"]
+    threshold_deteccion=float(config["PROCESAMIENTO"]["threshold_deteccion"])
 
     model = YOLO(config.get("PESOS","ruta"))
     
