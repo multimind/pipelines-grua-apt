@@ -24,6 +24,7 @@ channel=None
 font=None
 
 threshold_deteccion=0.0
+threshold_deteccion_estructura_imanes=0.0
 
 def log_setup(path, level):
 
@@ -78,7 +79,12 @@ def inferir_imagen(nombre_imagen, model):
 
         clase=str(classes.get(int(class_id)))
 
-        if confidence<threshold_deteccion:
+        if clase=="estructura_imanes" and confidence<threshold_deteccion_estructura_imanes:
+            print("descarto: "+clase)
+            print("probabilidad: "+str(confidence))
+            continue
+
+        elif confidence<threshold_deteccion:
             print("descarto: "+clase)
             print("probabilidad: "+str(confidence))
             continue
@@ -171,6 +177,7 @@ def procesar(config):
 
     global font 
     global threshold_deteccion
+    global threshold_deteccion_estructura_imanes
     
     font= ImageFont.truetype("Roboto-Regular.ttf", size=20)
     
@@ -179,7 +186,8 @@ def procesar(config):
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
     threshold_deteccion=float(config["PROCESAMIENTO"]["threshold_deteccion"])
-    
+    threshold_deteccion_estructura_imanes=float(config["PROCESAMIENTO"]["threshold_deteccion_estructura_imanes"])
+
     canal_posible_alerta=config["RABBIT_SALIDA"]["canal_posible_alerta"]
     
     model = YOLO(config.get("PESOS","ruta"))
