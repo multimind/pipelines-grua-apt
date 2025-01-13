@@ -193,16 +193,28 @@ def procesar(config):
     model = YOLO(config.get("PESOS","ruta"))
     
     model.model.to(config["CONTEXTO"]["contexto"])
+
+    while True:
+        try:
     
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-    channel = connection.channel()
+            connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+            channel = connection.channel()
 
-    channel.queue_declare(queue=nombre_canal)
+            channel.queue_declare(queue=nombre_canal)
 
-    channel.basic_consume(queue=nombre_canal, on_message_callback=callback)
+            channel.basic_consume(queue=nombre_canal, on_message_callback=callback)
 
-    channel.start_consuming()
+            channel.start_consuming()
 
+        except pika.exceptions.AMQPConnectionError as e:
+            print(f"Connection error: {e}. Reconnecting in 5 seconds...")
+            time.sleep(5)
+        except pika.exceptions.ChannelClosedByBroker as e:
+            print(f"Channel closed by broker: {e}. Reconnecting in 5 seconds...")
+            time.sleep(5)
+        except Exception as e:
+            print(f"Unexpected error: {e}. Reconnecting in 5 seconds...")
+            time.sleep(5)
 
 if __name__ == "__main__":
 
