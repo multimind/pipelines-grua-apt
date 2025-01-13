@@ -181,7 +181,7 @@ def calcular_factor(estructuras,trabajadores,ancho_imagen,alto_imagen,ruta_frame
             print(x1)
             print(y1)
             print(x2)
-            print(y3)
+            print(y2)
 
             px=int(x1+(x2-x1/2.0))
             py=int(y1+(y2-y1/2.0))

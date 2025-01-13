@@ -89,6 +89,12 @@ def inferir_imagen(nombre_imagen, model):
         if clase=="estructura_imanes" and confidence<threshold_deteccion_estructura_imanes:
             print("descarto: "+clase)
             print("probabilidad: "+str(confidence))
+
+            random_number = random.randint(1, 100)
+            nombre_imagen = os.path.basename(nombre_imagen)
+            if random > 35:
+                shutil.copy(nombre_imagen,ruta_raros+"/"+nombre_imagen)
+
             continue
 
         elif confidence<threshold_deteccion:
