@@ -17,6 +17,7 @@ model=None
 ruta_boxes=None
 nombre_canal=None
 ruta_pintadas=None
+ruta_raros=None
 
 canal_posible_alerta=None
 
@@ -60,8 +61,14 @@ def inferir_imagen(nombre_imagen, model):
     respuesta = []
 
     hay_trabajador=False
-
+   
     if len(boxes)==0:
+        
+        random_number = random.randint(1, 100)
+        nombre_imagen = os.path.basename(nombre_imagen)
+        if random > 35:
+            shutil.copy(nombre_imagen,ruta_raros+"/"+nombre_imagen)
+        
         os.remove(nombre_imagen)
         return
 
@@ -170,6 +177,7 @@ def procesar(config):
     global ruta_boxes
     global nombre_canal
     global ruta_pintadas
+    global ruta_raros
     
     global channel
 
@@ -185,6 +193,7 @@ def procesar(config):
 
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
+    ruta_raros=config["PROCESAMIENTO"]["ruta_raros"]
     threshold_deteccion=float(config["PROCESAMIENTO"]["threshold_deteccion"])
     threshold_deteccion_estructura_imanes=float(config["PROCESAMIENTO"]["threshold_deteccion_estructura_imanes"])
 
