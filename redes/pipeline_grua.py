@@ -12,12 +12,15 @@ from PIL import Image,ImageDraw
 import datetime
 import math
 import requests
+import random
+import shutil
 
 nombre_canal=None
 
 ruta_boxes=None
 ruta_pintadas=None
 ruta_frames=None
+ruta_raros=None
 
 url_telegram=None
 canal_id=None
@@ -131,7 +134,8 @@ def buscar_trabajador_en_area(deteccion,area_roja):
 
     return False
 
-def calcular_factor(estructuras,trabajadores,ancho_imagen,alto_imagen,delta_x=100,delta_y=150):
+def calcular_factor(estructuras,trabajadores,ancho_imagen,alto_imagen,ruta_frames,nombre_imagen,delta_x=100,delta_y=150):
+    global ruta_raros
 
     if len(trabajadores)==0:
         return False,None,None,None
@@ -194,6 +198,12 @@ def calcular_factor(estructuras,trabajadores,ancho_imagen,alto_imagen,delta_x=10
 
     if estructura_seleccionada==None:
         print("salgo aca?=???")
+
+        random_number = random.randint(1, 100)
+
+        if random > 35:
+            shutil.copy(ruta_frames+"/"+nombre_imagen,ruta_raros+"/"+nombre_imagen)
+
         return True,False,None,None
 
     factor_riego=False
@@ -287,7 +297,7 @@ def callback(ch, method, properties, body):
         if url_box.endswith(".txt"):
             print("por aca???")
             boxes,trabajadores=procesar_boxes(url_box)
-            hay_trabajadores,hay_estructura,dentro_zona_riesgo,area_seguridad_roja=calcular_factor(boxes,trabajadores,ancho_imagen,alto_imagen)
+            hay_trabajadores,hay_estructura,dentro_zona_riesgo,area_seguridad_roja=calcular_factor(boxes,trabajadores,ancho_imagen,alto_imagen,ruta_frames,solo_nombre)
            
             if dentro_zona_riesgo:
 
@@ -346,15 +356,17 @@ def procesar(config):
     global ruta_pintadas
     global channel
     global ruta_frames
+    global ruta_raros
 
     global url_telegram
     global canal_id
-
+    
     nombre_canal=config["PROCESAMIENTO"]["nombre_canal"]
 
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
     ruta_frames=config["PROCESAMIENTO"]["ruta_frames"]
+    ruta_raros=config["PROCESAMIENTO"]["ruta_raros"]
    
     url_telegram=config["TELEGRAM"]["url_telegram"]
     canal_id=config["TELEGRAM"]["canal_id"]
