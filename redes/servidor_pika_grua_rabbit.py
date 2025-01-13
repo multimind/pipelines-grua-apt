@@ -62,7 +62,7 @@ def inferir_imagen(nombre_imagen, model):
     hay_trabajador=False
 
     if len(boxes)==0:
-        os.remove(image_path)
+        os.remove(nombre_imagen)
         return
 
     image = Image.open(nombre_imagen)
