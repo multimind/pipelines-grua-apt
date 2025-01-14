@@ -166,6 +166,9 @@ def inferir_imagen(ruta_imagen, model):
         print("alerta en: "+canal_posible_alerta)
  
         channel.basic_publish(exchange='', routing_key=canal_posible_alerta, body=ruta_full_boxes)
+    else:
+        print("sin trabajador!!!")
+        os.remove(ruta_imagen)
 
 
 # Callback for handling messages
