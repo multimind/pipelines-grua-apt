@@ -40,14 +40,14 @@ def log_setup(path, level):
     logger.addHandler(handler)
     logger.setLevel(level)
 
-def inferir_imagen(nombre_imagen, model):
+def inferir_imagen(ruta_imagen, model):
     global channel
     global ruta_boxes
     global font
     global canal_posible_alerta
     global threshold_deteccion
 
-    solo_nombre = os.path.basename(nombre_imagen)
+    solo_nombre = os.path.basename(ruta_imagen)
     solo_nombre = solo_nombre.replace(".jpg", "")
 
     partes = solo_nombre.split("_")
@@ -55,7 +55,7 @@ def inferir_imagen(nombre_imagen, model):
     parte_entera = int(partes[0])
     parte_fraccional = int(partes[1])
 
-    results = model(nombre_imagen)[0] 
+    results = model(ruta_imagen)[0] 
 
     boxes = results.boxes.data.tolist()
     classes = results.names
@@ -67,14 +67,16 @@ def inferir_imagen(nombre_imagen, model):
     if len(boxes)==0:
         
         random_number = random.randint(1, 100)
-        nombre_imagen = os.path.basename(nombre_imagen)
-        if random_number > 35:
-            shutil.copy(nombre_imagen,ruta_raros+"/"+nombre_imagen)
+        solo_el_nombre = os.path.basename(ruta_imagen)
         
-        os.remove(nombre_imagen)
+        if random_number > 35:
+            shutil.copy(ruta_imagen,ruta_raros+"/"+solo_el_nombre)
+        
+        
+        os.remove(ruta_imagen)
         return
 
-    image = Image.open(nombre_imagen)
+    image = Image.open(ruta_imagen)
     img_width, img_height = image.size
 
     detecciones=[]
@@ -93,9 +95,9 @@ def inferir_imagen(nombre_imagen, model):
             print("probabilidad: "+str(confidence))
 
             random_number = random.randint(1, 100)
-            nombre_imagen = os.path.basename(nombre_imagen)
+            solo_el_nombre = os.path.basename(ruta_imagen)
             if random_number > 35:
-                shutil.copy(nombre_imagen,ruta_raros+"/"+nombre_imagen)
+                shutil.copy(ruta_imagen,ruta_raros+"/"+solo_el_nombre)
 
             continue
 
@@ -230,6 +232,7 @@ def procesar(config):
             print(f"Channel closed by broker: {e}. Reconnecting in 5 seconds...")
             time.sleep(5)
         except Exception as e:
+            print(e)
             print(f"Unexpected error: {e}. Reconnecting in 5 seconds...")
             time.sleep(5)
 
