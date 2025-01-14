@@ -65,7 +65,7 @@ def inferir_imagen(ruta_imagen, model):
     hay_trabajador=False
    
     if len(boxes)==0:
-        
+        print("sin boxes!!!!")
         random_number = random.randint(1, 100)
         solo_el_nombre = os.path.basename(ruta_imagen)
         
