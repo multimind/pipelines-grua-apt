@@ -67,7 +67,7 @@ def inferir_imagen(nombre_imagen, model):
         
         random_number = random.randint(1, 100)
         nombre_imagen = os.path.basename(nombre_imagen)
-        if random > 35:
+        if random_number > 35:
             shutil.copy(nombre_imagen,ruta_raros+"/"+nombre_imagen)
         
         os.remove(nombre_imagen)
@@ -93,7 +93,7 @@ def inferir_imagen(nombre_imagen, model):
 
             random_number = random.randint(1, 100)
             nombre_imagen = os.path.basename(nombre_imagen)
-            if random > 35:
+            if random_number > 35:
                 shutil.copy(nombre_imagen,ruta_raros+"/"+nombre_imagen)
 
             continue
