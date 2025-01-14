@@ -201,7 +201,7 @@ def calcular_factor(estructuras,trabajadores,ancho_imagen,alto_imagen,ruta_frame
 
         random_number = random.randint(1, 100)
 
-        if random > 35:
+        if random_number > 35:
             shutil.copy(ruta_frames+"/"+nombre_imagen,ruta_raros+"/"+nombre_imagen)
 
         return True,False,None,None
