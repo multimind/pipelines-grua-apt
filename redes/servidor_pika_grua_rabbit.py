@@ -12,6 +12,7 @@ import logging
 import argparse
 from PIL import Image,ImageDraw,ImageFont
 import shutil
+import time
 
 model=None
 ruta_boxes=None
