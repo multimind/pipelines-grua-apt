@@ -13,6 +13,7 @@ import argparse
 from PIL import Image,ImageDraw,ImageFont
 import shutil
 import time
+import random
 
 model=None
 ruta_boxes=None
