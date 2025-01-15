@@ -150,7 +150,7 @@ def inferir_imagen(ruta_imagen, model):
             draw.rectangle((rectangulo[0],rectangulo[1],rectangulo[2],rectangulo[3]), outline = rectangulo[4] ,width=5)
 
     if hay_trabajador:
-        solo_nombre = os.path.basename(nombre_imagen)
+        solo_nombre = os.path.basename(ruta_imagen)
         ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
         image.save(ruta_full_pintada)
 
