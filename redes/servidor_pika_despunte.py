@@ -12,6 +12,7 @@ import logging
 import argparse
 from PIL import Image,ImageDraw,ImageFont
 import shutil
+import random 
 
 model=None
 nombre_canal=None
@@ -20,6 +21,7 @@ ruta_boxes=None
 ruta_tiles=None
 ruta_pintadas=None
 ruta_trabajadores=None
+ruta_crops=None
 
 canal_posible_alerta=None
 canal_alerta_despunte_grande=None
@@ -30,6 +32,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
     global channel
     global ruta_trabajadores
     global ruta_pintadas
+    global ruta_crops
     global canal_posible_alerta
     global canal_alerta_despunte_grande
 
@@ -50,6 +53,7 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
 
     mensajes_full=[]
     rectangulos_full=[]
+    indice_crop=0
 
     for y in range(0, img_height, patch_height):
         for x in range(0, img_width, patch_width):
@@ -79,6 +83,38 @@ def save_image_patches(image_path, patch_size, output_dir,model,parte_entera,par
                 y1=box[1]
                 x2=box[2]
                 y2=box[3]
+
+                random_number = random.randint(1, 100)
+
+                if random_number>0.7:
+                    solo_nombre = os.path.basename(image_path)
+                    cropped_img = image.crop((x1,y1,x2,y2))
+                    cropped_img.save(ruta_crops+"/"+solo_nombre+"_"+str(indice_crop)+".jpg")
+
+                    delta=150
+                    x1_expandido=x1-delta
+
+                    if x1_expandido<0:
+                        x1_expandido=0
+
+                    x2_expandido=x2+delta
+
+                    if x2_expandido>=patch_width:
+                        x2_expandido=patch_width-1
+
+                    y1_expandido=y1-delta
+                    if y1_expandido<0:
+                        y1_expandido=0
+
+                    y2_expandido=y2+delta
+
+                    if y2_expandido>=patch_height:
+                        y2_expandido=patch_height-1
+
+                    cropped_img = image.crop((x1_expandido,y1_expandido,x2_expandido,y2_expandido))
+                    cropped_img.save(ruta_crops+"/expandida_"+solo_nombre+"_"+str(indice_crop)+".jpg")
+
+                    indice_crop=indice_crop+1
 
                 string_deteccion = str(clase)+','+str(int(x1))+","+str(int(y1))+","+str(int(x2))+","+str(int(y2))+","+str(parte_entera)+","+str(parte_fraccional)
                
@@ -213,6 +249,7 @@ def procesar(config):
     global ruta_boxes
     global ruta_tiles
     global ruta_pintadas
+    global ruta_crops
     global ruta_trabajadores
     global channel
 
@@ -225,6 +262,7 @@ def procesar(config):
     ruta_tiles=config["PROCESAMIENTO"]["ruta_tiles"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
     ruta_trabajadores=config["PROCESAMIENTO"]["ruta_trabajadores"]
+    ruta_crops=config["PROCESAMIENTO"]["ruta_crops"]
 
     canal_posible_alerta=config["RABBIT_SALIDA"]["canal_posible_alerta"]
     canal_alerta_despunte_grande=config["RABBIT_SALIDA"]["canal_alerta_despunte_grande"]
