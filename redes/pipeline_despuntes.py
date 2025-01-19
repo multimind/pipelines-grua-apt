@@ -359,6 +359,11 @@ def enviar_alerta(grupo):
         print(e)
 
 
+def guardar_crop(grupo_despuntes,ruta_imagen):
+
+    pass
+
+
 def borrar_imagen(url_box):
     global ruta_frames
     global ruta_boxes
@@ -437,6 +442,7 @@ def callback(ch, method, properties, body):
                     borrar_grupo(grupo_despuntes)
                     primer_grupo=None
                     segundo_grupo=None
+                    borrar_imagen(url_box)
                 else:
 
                     hay_movimiento = detectar_movimiento_despunte(grupo_despuntes,primer_grupo)
@@ -450,6 +456,7 @@ def callback(ch, method, properties, body):
                         primer_grupo=grupo_despuntes
                         segundo_grupo=None
                         estado="PRIMER_DESPUNTE"
+                        borrar_imagen(url_box)
                     else:
 
                         #enviar alerta 
@@ -466,15 +473,19 @@ def callback(ch, method, properties, body):
                     borrar_grupo(grupo_despuntes)
                     primer_grupo=None
                     segundo_grupo=None
+                    borrar_imagen(url_box)
                 elif hay_movimiento:
                     estado="CONTINUA_DESPUNTE"
                     #borrar anterior
                     primer_grupo=grupo_despuntes
+                    borrar_imagen(url_box)
+                    #ACA guardar crop!
                 elif not hay_movimiento:
                     estado="PRIMER_DESPUNTE"
                     
                     borrar_grupo(primer_grupo)
                     primer_grupo=grupo_despuntes
+                    borrar_imagen(url_box)
 
     print("--------- estado final: "+estado+" --------------")
            
