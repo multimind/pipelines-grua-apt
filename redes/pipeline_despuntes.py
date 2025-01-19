@@ -334,23 +334,30 @@ def enviar_alerta(grupo):
     print("ruta alerta")
     print(ruta_imagen)
 
-    if os.path.isfile(ruta_imagen):
-        archivo = open(ruta_imagen,'rb')
-                            
-        mensaje="despunte"
-                            
-        url = url_telegram + "/sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
+    try:
 
-        files={'photo': archivo}
-        values={'upload_file' : ruta_pintadas+"/"+solo_nombre, 'mimetype':'image/jpg','caption':mensaje }
+        if os.path.isfile(ruta_imagen):
+            archivo = open(ruta_imagen,'rb')
+                                
+            mensaje="despunte"
+                                
+            url = url_telegram + "/sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
 
-        response = requests.post(url,files=files,data=values)
+            files={'photo': archivo}
+            values={'upload_file' : ruta_pintadas+"/"+solo_nombre, 'mimetype':'image/jpg','caption':mensaje }
 
-        archivo.close()
-            
-        print("enviada!!!!")
-    else:
-        print("sin envio!")
+            response = requests.post(url,files=files,data=values)
+
+            archivo.close()
+                
+            print("enviada!!!!")
+        else:
+            print("sin envio!")
+
+    except Exception as e:
+        print("ERROR EN ENVIO TELEGRAM")
+        print(e)
+
 
 def borrar_imagen(url_box):
     global ruta_frames
