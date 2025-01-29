@@ -12,8 +12,7 @@ from PIL import Image,ImageDraw
 import datetime
 import math
 import requests
-from datetime import datetime
-
+ 
 nombre_canal=None
 
 ruta_boxes=None
