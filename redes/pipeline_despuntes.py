@@ -12,6 +12,7 @@ from PIL import Image,ImageDraw
 import datetime
 import math
 import requests
+from datetime import datetime
 
 nombre_canal=None
 
@@ -19,6 +20,7 @@ ruta_boxes=None
 ruta_tiles=None
 ruta_pintadas=None
 ruta_frames=None
+sector=None
 
 url_telegram=None
 canal_id=None
@@ -325,6 +327,8 @@ def enviar_alerta(grupo):
     global url_telegram
     global canal_id
     global estado
+    global nombre_canal
+    global sector
 
     solo_nombre=grupo.solo_nombre
     solo_nombre=solo_nombre.replace(".txt","")
@@ -353,6 +357,33 @@ def enviar_alerta(grupo):
             print("enviada!!!!")
         else:
             print("sin envio!")
+
+            current_date_iso = datetime.now().date().isoformat()
+
+            codigo_sector=-1
+            if sector=="danielli":
+                codigo_sector=3
+            elif sector=="ats A":
+                codigo_sector=4
+            elif sector=="ats B":
+                codigo_sector=5
+                
+            datos_post={
+                "fecha":current_date_iso,
+                "sector": codigo_sector,
+                "ruta_imagen":"imagenes/despuntes",
+                "tipo_producto": "Por definir"
+            }
+
+            response = requests.post(url, json=data)
+
+        # # http://10.25.52.11:5555/despuntes
+
+        #     
+        #     danielli: 3
+        #     ats A: 4
+        #     ats B: 5
+
 
     except Exception as e:
         print("ERROR EN ENVIO TELEGRAM")
@@ -498,6 +529,7 @@ def procesar(config):
     global ruta_pintadas
     global channel
     global ruta_frames
+    global sector
 
     global url_telegram
     global canal_id
@@ -508,6 +540,7 @@ def procesar(config):
     ruta_tiles=config["PROCESAMIENTO"]["ruta_tiles"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
     ruta_frames=config["PROCESAMIENTO"]["ruta_frames"]
+    sector=config["PROCESAMIENTO"]["sector"]
    
     url_telegram=config["TELEGRAM"]["url_telegram"]
     canal_id=config["TELEGRAM"]["canal_id"]
