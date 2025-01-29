@@ -375,7 +375,7 @@ def enviar_alerta(grupo):
                 "tipo_producto": "Por definir"
             }
 
-            response = requests.post(url, json=data)
+            response = requests.post(url, json=datos_post)
 
         # # http://10.25.52.11:5555/despuntes
 
