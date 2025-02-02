@@ -20,6 +20,7 @@ ruta_boxes=None
 nombre_canal=None
 ruta_pintadas=None
 ruta_raros=None
+ruta_crops=None
 
 canal_posible_alerta=None
 
@@ -210,6 +211,7 @@ def procesar(config):
     global nombre_canal
     global ruta_pintadas
     global ruta_raros
+    global ruta_crops
     
     global channel
 
@@ -227,6 +229,7 @@ def procesar(config):
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
     ruta_raros=config["PROCESAMIENTO"]["ruta_raros"]
     threshold_deteccion=float(config["PROCESAMIENTO"]["threshold_deteccion"])
+    ruta_crops=config["PROCESAMIENTO"]["ruta_crops"]
 
     canal_posible_alerta=config["RABBIT_SALIDA"]["canal_posible_alerta"]
     
