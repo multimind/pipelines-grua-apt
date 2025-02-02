@@ -16,7 +16,6 @@ import requests
 nombre_canal=None
 
 ruta_boxes=None
-ruta_tiles=None
 ruta_pintadas=None
 ruta_frames=None
 sector=None
@@ -66,8 +65,6 @@ def procesar(config):
     global nombre_canal
     
     global ruta_boxes
-    global ruta_tiles
-    global ruta_pintadas
     global channel
     global ruta_frames
     global sector
@@ -78,7 +75,6 @@ def procesar(config):
     nombre_canal=config["RABBIT_ENTRADA"]["nombre_canal"]
 
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
-    ruta_tiles=config["PROCESAMIENTO"]["ruta_tiles"]
     ruta_pintadas=config["PROCESAMIENTO"]["ruta_pintadas"]
     ruta_frames=config["PROCESAMIENTO"]["ruta_frames"]
     sector=config["PROCESAMIENTO"]["sector"]
