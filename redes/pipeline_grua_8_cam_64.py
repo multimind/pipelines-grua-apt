@@ -75,7 +75,7 @@ def procesar(config):
     global url_telegram
     global canal_id
 
-    nombre_canal=config["PROCESAMIENTO"]["nombre_canal"]
+    nombre_canal=config["RABBIT_ENTRADA"]["nombre_canal"]
 
     ruta_boxes=config["PROCESAMIENTO"]["ruta_boxes"]
     ruta_tiles=config["PROCESAMIENTO"]["ruta_tiles"]
