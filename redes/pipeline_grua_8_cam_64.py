@@ -94,8 +94,11 @@ def callback(ch, method, properties, body):
     if estado=="SIN_TRABAJADOR":
 
         if partes[1]=="sin":
-            os.remove(partes[0])
-            os.remove(ruta_imagen)
+            if os.path.isfile(partes[0]):
+                os.remove(partes[0])
+
+            if os.path.isfile(ruta_imagen):
+                os.remove(ruta_imagen)
 
         elif partes[1]=="con":
 
@@ -107,6 +110,12 @@ def callback(ch, method, properties, body):
             os.remove(partes[0])
             os.remove(ruta_imagen)
             estado="SIN_TRABAJADOR"
+
+            if os.path.isfile(partes[0]):
+                os.remove(partes[0])
+
+            if os.path.isfile(ruta_imagen):
+                os.remove(ruta_imagen)
 
         elif partes[1]=="con":
             pass
