@@ -22,7 +22,7 @@ ruta_pintadas=None
 ruta_raros=None
 ruta_crops=None
 
-canal_posible_alerta=None
+canal_salida=None
 
 channel=None
 font=None
@@ -45,7 +45,7 @@ def inferir_imagen(ruta_imagen, model):
     global channel
     global ruta_boxes
     global font
-    global canal_posible_alerta
+    global canal_salida
     global threshold_deteccion
 
     solo_nombre = os.path.basename(ruta_imagen)
@@ -74,6 +74,7 @@ def inferir_imagen(ruta_imagen, model):
             shutil.copy(ruta_imagen,ruta_raros+"/"+solo_el_nombre)
         
         os.remove(ruta_imagen)
+        channel.basic_publish(exchange='', routing_key="salida", body="")
         return
 
     image = Image.open(ruta_imagen)
@@ -183,11 +184,12 @@ def inferir_imagen(ruta_imagen, model):
     
         f.close() 
 
-        print("alerta en: "+canal_posible_alerta)
+        print("alerta en: "+canal_salida)
  
-        channel.basic_publish(exchange='', routing_key=canal_posible_alerta, body=ruta_full_boxes)
+        channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes)
     else:
         print("sin trabajador!!!")
+        channel.basic_publish(exchange='', routing_key=canal_salida, body="")
         os.remove(ruta_imagen)
 
 
@@ -215,7 +217,7 @@ def procesar(config):
     
     global channel
 
-    global canal_posible_alerta
+    global canal_salida
 
     global font 
     global threshold_deteccion
@@ -231,7 +233,7 @@ def procesar(config):
     threshold_deteccion=float(config["PROCESAMIENTO"]["threshold_deteccion"])
     ruta_crops=config["PROCESAMIENTO"]["ruta_crops"]
 
-    canal_posible_alerta=config["RABBIT_SALIDA"]["canal_posible_alerta"]
+    canal_salida=config["RABBIT_SALIDA"]["nombre_canal"]
     
     model = YOLO(config.get("PESOS","ruta"))
     
