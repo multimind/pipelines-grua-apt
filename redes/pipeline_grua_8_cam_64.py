@@ -56,8 +56,10 @@ def callback(ch, method, properties, body):
 
     print(f"Received: {body.decode()}")
 
-    url_image=body.decode()
-    print(url_image)
+    url_box=body.decode()
+    print(url_box)
+    
+    #os.remove(url_frame)
 
 
 def procesar(config):

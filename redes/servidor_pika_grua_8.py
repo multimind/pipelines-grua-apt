@@ -73,8 +73,13 @@ def inferir_imagen(ruta_imagen, model):
         if random_number > 80:
             shutil.copy(ruta_imagen,ruta_raros+"/"+solo_el_nombre)
         
-        os.remove(ruta_imagen)
-        channel.basic_publish(exchange='', routing_key="salida", body="")
+
+        solo_nombre = os.path.basename(ruta_imagen)
+        ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
+        
+        ruta_full_boxes=ruta_boxes+"/"+solo_nombre+".txt"
+        
+        channel.basic_publish(exchange='', routing_key="salida", body=ruta_full_boxes+";sin")
         return
 
     image = Image.open(ruta_imagen)
@@ -186,11 +191,15 @@ def inferir_imagen(ruta_imagen, model):
 
         print("alerta en: "+canal_salida)
  
-        channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes)
+        channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes+";con")
     else:
-        print("sin trabajador!!!")
-        channel.basic_publish(exchange='', routing_key=canal_salida, body="")
-        os.remove(ruta_imagen)
+        solo_nombre = os.path.basename(ruta_imagen)
+        ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
+        
+        ruta_full_boxes=ruta_boxes+"/"+solo_nombre+".txt"
+        
+        channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes+";sin")
+        
 
 
 # Callback for handling messages
