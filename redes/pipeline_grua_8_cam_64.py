@@ -32,6 +32,31 @@ estado="SIN_TRABAJADOR"
 primer_grupo=None
 segundo_grupo=None
 
+def enviar_alerta(ruta_imagen):
+
+    try:
+
+        if os.path.isfile(ruta_imagen):
+            archivo = open(ruta_imagen,'rb')
+                                
+            mensaje="ingreso trabajador"
+                                
+            url = url_telegram + "/sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
+
+            files={'photo': archivo}
+            values={'upload_file' : ruta_imagen, 'mimetype':'image/jpg','caption':mensaje }
+
+            response = requests.post(url,files=files,data=values)
+
+            archivo.close()
+
+        else:
+            print("sin envio")
+
+    except Exception as e:
+        print("ERROR EN ENVIO TELEGRAM")
+        print(e)
+
 def reconstruct_timestamp(integer_part, fractional_part):
     timestamp = float(integer_part) + int(fractional_part) / 1_000_000
     reconstructed_datetime = datetime.datetime.fromtimestamp(timestamp)
@@ -61,6 +86,30 @@ def callback(ch, method, properties, body):
     
     #os.remove(url_frame)
 
+    #/data/runtime_camara1/boxes/1738504260_121319_1920_1080.jpg.txt;sin
+    partes=url_box.split(";")
+
+    ruta_imagen=partes[0].replace(".txt","")
+
+    if estado=="SIN_TRABAJADOR":
+
+        if partes[1]=="sin":
+            os.remove(partes[0])
+            os.remove(ruta_imagen)
+
+        elif partes[1]=="con":
+
+            estado="CON_TRABAJADOR"
+            enviar_alerta(ruta_imagen)
+    else:
+
+        if partes[1]=="sin":
+            os.remove(partes[0])
+            os.remove(ruta_imagen)
+            estado="SIN_TRABAJADOR"
+
+        elif partes[1]=="con":
+            pass
 
 def procesar(config):
     global model
