@@ -107,8 +107,6 @@ def callback(ch, method, properties, body):
     else:
 
         if partes[1]=="sin":
-            os.remove(partes[0])
-            os.remove(ruta_imagen)
             estado="SIN_TRABAJADOR"
 
             if os.path.isfile(partes[0]):
