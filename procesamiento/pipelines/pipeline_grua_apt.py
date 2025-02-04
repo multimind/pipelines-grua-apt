@@ -20,6 +20,7 @@ from operadores.deteccion import trabajador_en_zona_grua
 from operadores.debug import guardar_raros
 from operadores.alerta import operador_generar_alerta
 from operadores.limpiar import operador_limpiar
+from operadores.limpiar import operador_limpiar_delay
 from operadores.transformar_datos import convertir_boxes_json
 from util import configuracion_logger
 import logging
@@ -70,6 +71,9 @@ def procesar(config):
     
     #pika_red_neuronal.procesar_imagen(nombre_canaral,"detecciones",None, "detectron2"),
     #socket_red_neuronal.procesarImagen(config["RED_DETECCION_GRUA"]["ip"],int(config["RED_DETECCION_GRUA"]["puerto"]),"detecciones",None, "detectron2"),
+      
+    cola_borrar=[]  
+    delay=3
        
     compuesto=stream.pipe(
         convertir_boxes_json.convertir(),
@@ -78,7 +82,7 @@ def procesar(config):
         pintar_grua_apt.pintar(variables_globales,config["DESCARGA"]["pintados"]),
         #operador_generar_alerta.alerta_imagen(variables_globales,config["TELEGRAM"]["url"],config["TELEGRAM"]["chat_id"],config["DESCARGA"]["pintados"]),
         guardar_raros.guardar(variables_globales,config["DESCARGA"]["raros"]),
-        operador_limpiar.limpiar(variables_globales,config["DESCARGA"]["pintados"])
+        operador_limpiar_delay.limpiar(variables_globales,config["DESCARGA"]["pintados"],cola_borrar,delay)
     )
 
     printObserver=print_observer.PrintObserver()
