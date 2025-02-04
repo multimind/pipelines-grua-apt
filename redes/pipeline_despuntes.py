@@ -12,8 +12,7 @@ from PIL import Image,ImageDraw
 import datetime
 import math
 import requests
-from datetime import datetime
-
+ 
 nombre_canal=None
 
 ruta_boxes=None
@@ -354,11 +353,7 @@ def enviar_alerta(grupo):
 
             archivo.close()
                 
-            print("enviada!!!!")
-        else:
-            print("sin envio!")
-
-            current_date_iso = datetime.now().date().isoformat()
+            current_date_iso = datetime.datetime.now().date().isoformat()
 
             codigo_sector=-1
             if sector=="danielli":
@@ -367,6 +362,8 @@ def enviar_alerta(grupo):
                 codigo_sector=4
             elif sector=="ats B":
                 codigo_sector=5
+
+            url_reporte="http://10.25.52.11:5555/despuntes"
                 
             datos_post={
                 "fecha":current_date_iso,
@@ -375,9 +372,11 @@ def enviar_alerta(grupo):
                 "tipo_producto": "Por definir"
             }
 
-            response = requests.post(url, json=data)
+            response = requests.post(url_reporte, json=datos_post)
 
-        # # http://10.25.52.11:5555/despuntes
+        else:
+            print("sin envio")
+        # # 
 
         #     
         #     danielli: 3
