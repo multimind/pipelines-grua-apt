@@ -241,6 +241,8 @@ def inferir_imagen(ruta_imagen, model,parte_entera,parte_fraccional,zona):
         
         if estado=="BARRA_TRABADA":
             estado="NORMAL"
+
+    os.remove(ruta_imagen)
     
 def callback(ch, method, properties, body):
     global model
