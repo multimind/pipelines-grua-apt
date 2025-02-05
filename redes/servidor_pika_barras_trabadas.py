@@ -42,6 +42,8 @@ zona3=None
 url_telegram=None
 canal_id=None
 
+font = ImageFont.truetype("Roboto-Regular.ttf", size=20)
+
 curve = [
             (0, 0), (132,0), (172, 255),(255, 255)
         ]
@@ -119,6 +121,7 @@ def inferir_imagen(ruta_imagen, model,parte_entera,parte_fraccional,zona):
     global ruta_crops
     global estado
     global ruta_pintadas
+    global font
     
     print(ruta_imagen)
     
@@ -137,7 +140,7 @@ def inferir_imagen(ruta_imagen, model,parte_entera,parte_fraccional,zona):
     print("ruta crops")
     print(ruta_crops)
     #partes = solo_nombre.split("_")
-    crop_filtrado.save(ruta_crops+"/"+solo_nombre+".zona1.jpg")
+    #crop_filtrado.save(ruta_crops+"/"+solo_nombre+".zona1.jpg")
     
     results = model(crop_filtrado)[0] 
     classes = results.names
@@ -183,7 +186,6 @@ def inferir_imagen(ruta_imagen, model,parte_entera,parte_fraccional,zona):
             outline="white"
 
         text = clase+": "+str(int(confidence*100))+"%"
-        font = ImageFont.truetype("Roboto-Regular.ttf", size=20)
 
         y_mensaje = y1
                 
