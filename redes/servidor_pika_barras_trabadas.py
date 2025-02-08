@@ -211,10 +211,7 @@ def inferir_imagen(ruta_imagen, model,parte_entera,parte_fraccional,zona):
         elif clase=="barra doblada":
             hay_barra_trabada=True
             detecciones.append(string_deteccion)
-        elif clase=="barra horizontal":
-            hay_barra_trabada=True
-            detecciones.append(string_deteccion)
-    
+
     if hay_barra_trabada:
         draw = ImageDraw.Draw(crop_filtrado)
         
