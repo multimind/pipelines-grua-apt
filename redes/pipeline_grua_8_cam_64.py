@@ -94,9 +94,14 @@ def callback(ch, method, properties, body):
             print("borrando: "+ruta_imagen)
             if os.path.isfile(partes[0]):
                 os.remove(partes[0])
+            else:
+                print("no se puede borrar"+partes[0])
 
             if os.path.isfile(ruta_imagen):
                 os.remove(ruta_imagen)
+            else:
+                print("no se puede borrar"+ruta_imagen)
+
 
         elif partes[1]=="con":
 
