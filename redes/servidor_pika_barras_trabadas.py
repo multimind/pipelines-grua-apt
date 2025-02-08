@@ -211,9 +211,9 @@ def inferir_imagen(ruta_imagen, model,parte_entera,parte_fraccional,zona):
         elif clase=="barra doblada":
             hay_barra_trabada=True
             detecciones.append(string_deteccion)
-    
-    print("hay barra?")
-    print(hay_barra_trabada)
+        elif clase=="barra horizontal":
+            hay_barra_trabada=True
+            detecciones.append(string_deteccion)
     
     if hay_barra_trabada:
         draw = ImageDraw.Draw(crop_filtrado)
@@ -221,10 +221,6 @@ def inferir_imagen(ruta_imagen, model,parte_entera,parte_fraccional,zona):
         draw_original = ImageDraw.Draw(image)
 
         for mensaje in mensajes_full:
-            print(mensaje)
-            print(mensaje[0])
-            print(mensaje[1])
-            print(mensaje[2])
             draw.text(mensaje[0],mensaje[1],fill=mensaje[2],font=font)        
             draw_original.text((zona.x1,zona.y1),mensaje[1],fill=mensaje[2],font=font)        
 
@@ -247,8 +243,6 @@ def inferir_imagen(ruta_imagen, model,parte_entera,parte_fraccional,zona):
         if estado=="BARRA_TRABADA":
             estado="NORMAL"
 
-    print("borrar!")
-    print(ruta_imagen)
     os.remove(ruta_imagen)
     
 def callback(ch, method, properties, body):
