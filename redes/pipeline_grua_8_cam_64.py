@@ -86,7 +86,7 @@ def callback(ch, method, properties, body):
     
     partes=url_box.split(";")
 
-    ruta_imagen=partes[0].replace(".txt","")
+    ruta_imagen=partes[0].replace(".txt","").replace("boxes","frames")
 
     if estado=="SIN_TRABAJADOR":
 
