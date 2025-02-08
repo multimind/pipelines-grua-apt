@@ -84,9 +84,6 @@ def callback(ch, method, properties, body):
     url_box=body.decode()
     print(url_box)
     
-    #os.remove(url_frame)
-
-    #/data/runtime_camara1/boxes/1738504260_121319_1920_1080.jpg.txt;sin
     partes=url_box.split(";")
 
     ruta_imagen=partes[0].replace(".txt","")
@@ -94,6 +91,7 @@ def callback(ch, method, properties, body):
     if estado=="SIN_TRABAJADOR":
 
         if partes[1]=="sin":
+            print("borrando: "+ruta_imagen)
             if os.path.isfile(partes[0]):
                 os.remove(partes[0])
 
