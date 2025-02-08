@@ -79,7 +79,7 @@ def inferir_imagen(ruta_imagen, model):
         
         ruta_full_boxes=ruta_boxes+"/"+solo_nombre+".txt"
         
-        channel.basic_publish(exchange='', routing_key="salida", body=ruta_full_boxes+";sin")
+        channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes+";sin")
         return
 
     image = Image.open(ruta_imagen)
