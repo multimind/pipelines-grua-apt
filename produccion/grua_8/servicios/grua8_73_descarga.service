@@ -3,7 +3,7 @@ Description=Descarga imagenes camara 73 grua 8
 After=network.target
 
 [Service]
-ExecStart=python3 captura_gstreamer.py config/camara_73.ini 
+ExecStart=python3 captura_gstreamer.py config/captura_grua_8_73.ini 
 User=safetymind
 WorkingDirectory=/data/pipelines-grua-apt/captura
 Restart=always  
