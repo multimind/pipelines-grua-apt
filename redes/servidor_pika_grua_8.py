@@ -26,6 +26,7 @@ canal_salida=None
 
 channel=None
 font=None
+ruta_imagen_gui=None
 
 threshold_deteccion=0.0
 threshold_deteccion_estructura_imanes=0.0
@@ -47,6 +48,7 @@ def inferir_imagen(ruta_imagen, model):
     global font
     global canal_salida
     global threshold_deteccion
+    global ruta_imagen_gui
 
     solo_nombre = os.path.basename(ruta_imagen)
     solo_nombre = solo_nombre.replace(".jpg", "")
@@ -73,7 +75,7 @@ def inferir_imagen(ruta_imagen, model):
         if random_number > 80:
             shutil.copy(ruta_imagen,ruta_raros+"/"+solo_el_nombre)
         
-
+        shutil.copy(ruta_imagen,ruta_imagen_gui)
         solo_nombre = os.path.basename(ruta_imagen)
         ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
         
@@ -190,14 +192,14 @@ def inferir_imagen(ruta_imagen, model):
         f.close() 
 
         print("alerta en: "+canal_salida)
- 
+        shutil.copy(ruta_imagen,ruta_imagen_gui)
         channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes+";con")
     else:
         solo_nombre = os.path.basename(ruta_imagen)
         ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
         
         ruta_full_boxes=ruta_boxes+"/"+solo_nombre+".txt"
-        
+        shutil.copy(ruta_imagen,ruta_imagen_gui)
         channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes+";sin")
         
 
@@ -231,6 +233,7 @@ def procesar(config):
     global font 
     global threshold_deteccion
     global threshold_deteccion_estructura_imanes
+    global ruta_imagen_gui
     
     font= ImageFont.truetype("Roboto-Regular.ttf", size=20)
     
@@ -247,6 +250,8 @@ def procesar(config):
     model = YOLO(config.get("PESOS","ruta"))
     
     model.model.to(config["CONTEXTO"]["contexto"])
+
+    ruta_imagen_gui=config["GUI"]["ruta_imagen_gui"]
 
     while True:
         try:
