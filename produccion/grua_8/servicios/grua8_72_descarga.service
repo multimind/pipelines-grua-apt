@@ -1,0 +1,12 @@
+[Unit]
+Description=Descarga imagenes camara 72 grua 8 
+After=network.target
+
+[Service]
+ExecStart=python3 captura_gstreamer.py config/camara_72.ini 
+User=safetymind
+WorkingDirectory=/data/pipelines-grua-apt/captura
+Restart=always  
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,3 @@
+systemctl start grua8_64_descarga.service
+systemctl start grua8_64_pipeline.service
+systemctl start grua8_64_red.service

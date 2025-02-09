@@ -1,0 +1,3 @@
+systemctl stop grua8_72_descarga.service
+systemctl stop grua8_72_pipeline.service
+systemctl stop grua8_72_red.service

@@ -1,0 +1,12 @@
+[Unit]
+Description=Red Neuronal grua 8 camara 72
+After=network.target
+
+[Service]
+ExecStart=python3 servidor_pika_grua_8.py cfg/red_grua_8_72.ini 
+User=safetymind
+WorkingDirectory=/data/pipelines-grua-apt/redes
+Restart=always  
+
+[Install]
+WantedBy=multi-user.target
