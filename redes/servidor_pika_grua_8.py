@@ -67,23 +67,6 @@ def inferir_imagen(ruta_imagen, model):
 
     hay_trabajador=False
    
-    if len(boxes)==0:
-        print("sin boxes!!!!")
-        random_number = random.randint(1, 100)
-        solo_el_nombre = os.path.basename(ruta_imagen)
-        
-        if random_number > 80:
-            shutil.copy(ruta_imagen,ruta_raros+"/"+solo_el_nombre)
-        
-        shutil.copy(ruta_imagen,ruta_imagen_gui+"/fotograma.png")
-        solo_nombre = os.path.basename(ruta_imagen)
-        ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
-        
-        ruta_full_boxes=ruta_boxes+"/"+solo_nombre+".txt"
-        
-        channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes+";sin")
-        return
-
     image = Image.open(ruta_imagen)
     img_width, img_height = image.size
 
