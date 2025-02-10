@@ -1,13 +1,13 @@
 [Unit]
-Description=Pipeline grua 8 camara 64
+Description=Pipeline grua 8 camara 73
 After=network.target
 
 [Service]
-ExecStart=python3 pipeline_grua_8.py cfg/pipeline_camara_64.ini
+ExecStart=python3 pipeline_grua_8.py cfg/pipeline_grua_8_73.ini
 User=safetymind
 WorkingDirectory=/data/pipelines-grua-apt/redes
 Restart=always  
-StandardError=file:/data/logs_servicios/pipeline_camara_73.error
+StandardError=file:/data/logs_servicios/pipeline_grua_8_73.error
 
 [Install]
 WantedBy=multi-user.target
