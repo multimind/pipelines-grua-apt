@@ -125,7 +125,11 @@ def on_new_sample(sink,user_data):
     with open(STATUS_FILE, "w") as f:
         f.write(str(time.time()))
     
+    print("escribiendo!")
+
     notify("WATCHDOG=1")
+    
+    print("fin escribiendo watchdog")
 
     return Gst.FlowReturn.OK
 
@@ -172,12 +176,15 @@ def main(config):
   
     try:
         loop.run()
+        print("salgo????????????")
     except KeyboardInterrupt:
         print("Stopping...")
     finally:
         # Clean up
+        print("EL CODIGO SE TERMINA POR ALGUN MOTIVO!!!!!")
         loop.quit()
         pipeline.set_state(Gst.State.NULL)
+    print("SALIENDO!!!!")
         
 if __name__ == "__main__":
 
