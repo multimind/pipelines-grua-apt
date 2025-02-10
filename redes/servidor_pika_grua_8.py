@@ -242,6 +242,10 @@ def procesar(config):
     print(torch.cuda.memory_allocated())  # Memory allocated by tensors
     print(torch.cuda.memory_reserved()) 
 
+    print(f"Total GPU memory: {total_memory / 1024**3:.2f} GB")
+    print(f"Allocated GPU memory: {allocated_memory / 1024**3:.2f} GB")
+    print(f"Free GPU memory: {free_memory / 1024**3:.2f} GB")
+
     ruta_imagen_gui=config["GUI"]["ruta_imagen_gui"]
 
     while True:
