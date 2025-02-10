@@ -32,6 +32,8 @@ estado="SIN_TRABAJADOR"
 primer_grupo=None
 segundo_grupo=None
 
+import time
+
 def enviar_alerta(ruta_imagen):
     pass
     # try:
