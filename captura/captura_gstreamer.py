@@ -155,8 +155,7 @@ def main(config):
     os.makedirs("frames", exist_ok=True)
     
     Gst.init(None)
-    Gdk.threads_init() 
-
+    
     print(config["CAPTURA"]["pipeline_gstreamer"])
 
     pipeline = Gst.parse_launch(
