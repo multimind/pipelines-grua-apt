@@ -82,6 +82,8 @@ def callback(ch, method, properties, body):
     print(f"Received: {body.decode()}")
 
     url_box=body.decode()
+    ch.basic_ack(delivery_tag=method.delivery_tag)
+    
     print(url_box)
     
     partes=url_box.split(";")
