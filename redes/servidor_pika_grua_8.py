@@ -31,6 +31,8 @@ ruta_imagen_gui=None
 threshold_deteccion=0.0
 threshold_deteccion_estructura_imanes=0.0
 
+cuenta=0
+
 def log_setup(path, level):
 
     if not os.path.isdir("logs/grua/"):
@@ -49,6 +51,8 @@ def inferir_imagen(ruta_imagen, model):
     global canal_salida
     global threshold_deteccion
     global ruta_imagen_gui
+    global cuenta
+    global ruta_raros
 
     solo_nombre = os.path.basename(ruta_imagen)
     solo_nombre = solo_nombre.replace(".jpg", "")
@@ -76,6 +80,12 @@ def inferir_imagen(ruta_imagen, model):
     rectangulos_full=[]
     indice_crop=0    
 
+    cuenta=cuenta+1
+
+    if cuenta>=500:
+        image.save(ruta_raros+"/"+solo_nombre+".jpg")
+        cuenta=0
+
     for box in boxes:
         class_id = box[-1]
         confidence = box[4]
@@ -85,9 +95,6 @@ def inferir_imagen(ruta_imagen, model):
         if confidence<threshold_deteccion:
             print("descarto: "+clase)
             print("probabilidad: "+str(confidence))
-            continue
-
-        if clase=="estructura_imanes":
             continue
 
         x1=box[0]
@@ -185,8 +192,6 @@ def inferir_imagen(ruta_imagen, model):
         shutil.copy(ruta_imagen,ruta_imagen_gui+"/fotograma.png")
         channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes+";sin")
         
-
-
 # Callback for handling messages
 def callback(ch, method, properties, body):
     global model
