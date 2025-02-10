@@ -155,6 +155,8 @@ def main(config):
     os.makedirs("frames", exist_ok=True)
     
     Gst.init(None)
+    Gdk.threads_init() 
+
     print(config["CAPTURA"]["pipeline_gstreamer"])
 
     pipeline = Gst.parse_launch(
@@ -173,6 +175,8 @@ def main(config):
     pipeline.set_state(Gst.State.PLAYING)
 
     loop = GLib.MainLoop()
+
+    notify("READY=1")
   
     try:
         loop.run()
