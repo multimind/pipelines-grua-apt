@@ -33,29 +33,29 @@ primer_grupo=None
 segundo_grupo=None
 
 def enviar_alerta(ruta_imagen):
+    pass
+    # try:
 
-    try:
-
-        if os.path.isfile(ruta_imagen):
-            archivo = open(ruta_imagen,'rb')
+    #     if os.path.isfile(ruta_imagen):
+    #         archivo = open(ruta_imagen,'rb')
                                 
-            mensaje="ingreso trabajador"
+    #         mensaje="ingreso trabajador"
                                 
-            url = url_telegram + "/sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
+    #         url = url_telegram + "/sendPhoto?chat_id=" + canal_id + "&text=" + mensaje
 
-            files={'photo': archivo}
-            values={'upload_file' : ruta_imagen, 'mimetype':'image/jpg','caption':mensaje }
+    #         files={'photo': archivo}
+    #         values={'upload_file' : ruta_imagen, 'mimetype':'image/jpg','caption':mensaje }
 
-            response = requests.post(url,files=files,data=values)
+    #         response = requests.post(url,files=files,data=values)
 
-            archivo.close()
+    #         archivo.close()
 
-        else:
-            print("sin envio")
+    #     else:
+    #         print("sin envio")
 
-    except Exception as e:
-        print("ERROR EN ENVIO TELEGRAM")
-        print(e)
+    # except Exception as e:
+    #     print("ERROR EN ENVIO TELEGRAM")
+    #     print(e)
 
 def reconstruct_timestamp(integer_part, fractional_part):
     timestamp = float(integer_part) + int(fractional_part) / 1_000_000
