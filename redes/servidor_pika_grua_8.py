@@ -232,9 +232,15 @@ def procesar(config):
     
     model = YOLO(config.get("PESOS","ruta"))
     
+    print(torch.cuda.memory_allocated())  # Memory allocated by tensors
+    print(torch.cuda.memory_reserved()) 
+
     print("cargando a :"+config["CONTEXTO"]["contexto"])
     model.model.to(config["CONTEXTO"]["contexto"])
     print(next(model.parameters()).device)
+
+    print(torch.cuda.memory_allocated())  # Memory allocated by tensors
+    print(torch.cuda.memory_reserved()) 
 
     ruta_imagen_gui=config["GUI"]["ruta_imagen_gui"]
 
