@@ -242,6 +242,12 @@ def procesar(config):
     print(torch.cuda.memory_allocated())  # Memory allocated by tensors
     print(torch.cuda.memory_reserved()) 
 
+    total_memory = torch.cuda.get_device_properties(0).total_memory
+    allocated_memory = torch.cuda.memory_allocated(0)
+
+    # Calculate the remaining memory
+    free_memory = total_memory - allocated_memory
+    
     print(f"Total GPU memory: {total_memory / 1024**3:.2f} GB")
     print(f"Allocated GPU memory: {allocated_memory / 1024**3:.2f} GB")
     print(f"Free GPU memory: {free_memory / 1024**3:.2f} GB")
