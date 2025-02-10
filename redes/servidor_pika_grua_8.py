@@ -234,6 +234,7 @@ def procesar(config):
     
     print("cargando a :"+config["CONTEXTO"]["contexto"])
     model.model.to(config["CONTEXTO"]["contexto"])
+    print(next(model.parameters()).device)
 
     ruta_imagen_gui=config["GUI"]["ruta_imagen_gui"]
 
