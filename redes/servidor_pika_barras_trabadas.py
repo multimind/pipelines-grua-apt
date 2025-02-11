@@ -158,7 +158,7 @@ def inferir_imagen(ruta_imagen, model,parte_entera,parte_fraccional,zona):
                 
         clase=str(classes.get(int(class_id)))
 
-        if confidence<0.75:
+        if confidence<0.80:
             print("descarto: "+clase)
             print("probabilidad: "+str(confidence))
             continue
