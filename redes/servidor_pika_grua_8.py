@@ -102,95 +102,27 @@ def inferir_imagen(ruta_imagen, model):
         x2=box[2]
         y2=box[3]
 
-        random_number = random.randint(1, 100)
-
-        if random_number>0.7:
-
-            delta=150
-            x1_expandido=x1-delta
-
-            if x1_expandido<0:
-                x1_expandido=0
-
-            x2_expandido=x2+delta
-
-            if x2_expandido>=img_width:
-                x2_expandido=img_width-1
-
-            y1_expandido=y1-delta
-            
-            if y1_expandido<0:
-                y1_expandido=0
-
-            y2_expandido=y2+delta
-
-            if y2_expandido>=img_height:
-                y2_expandido=img_height-1
-
-            cropped_img = image.crop((x1_expandido,y1_expandido,x2_expandido,y2_expandido))
-            cropped_img.save(ruta_crops+"/"+solo_nombre+"_"+str(indice_crop)+".jpg")
-            indice_crop=indice_crop+1
         
-        outline="white"
-        
-        if clase=="trabajador":
-            outline="blue"
+    string_deteccion = str(clase)+','+str(int(x1))+","+str(int(y1))+","+str(int(x2))+","+str(int(y2))+","+str(confidence)+","+str(parte_entera)+","+str(parte_fraccional)
 
-        text = clase+": "+str(int(confidence*100))+"%"
+    detecciones.append(string_deteccion)
+   
+    solo_nombre = os.path.basename(ruta_imagen)
+    ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
+    image.save(ruta_full_pintada)
 
-        y_mensaje = y1
-                
-        delta_y=30
+    ruta_full_boxes=ruta_boxes+"/"+solo_nombre+".txt"
 
-        if y1-delta_y>0:
-            y_mensaje=y1-delta_y
+    f = open(ruta_full_boxes, "+w")
 
-        position_full=(x1,y_mensaje)
-
-        mensajes_full.append((position_full,text,outline))
-
-        rectangulos_full.append((x1,y1,x2,y2,outline))
-
-        string_deteccion = str(clase)+','+str(int(x1))+","+str(int(y1))+","+str(int(x2))+","+str(int(y2))+","+str(confidence)+","+str(parte_entera)+","+str(parte_fraccional)
-
-        if clase=="trabajador":
-            detecciones.append(string_deteccion)
-            hay_trabajador=True
-        
-
-    if hay_trabajador:
-        draw = ImageDraw.Draw(image)
-
-        for mensaje in mensajes_full:
-            draw.text(mensaje[0],mensaje[1],fill=mensaje[2],font=font)        
-
-        for rectangulo in rectangulos_full:
-            draw.rectangle((rectangulo[0],rectangulo[1],rectangulo[2],rectangulo[3]), outline = rectangulo[4] ,width=5)
-
-    if hay_trabajador:
-        solo_nombre = os.path.basename(ruta_imagen)
-        ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
-        image.save(ruta_full_pintada)
-
-        ruta_full_boxes=ruta_boxes+"/"+solo_nombre+".txt"
-
-        f = open(ruta_full_boxes, "+w")
-
-        for deteccion in detecciones:
-            f.write(deteccion+"\n")
+    for deteccion in detecciones:
+        f.write(deteccion+"\n")
     
-        f.close() 
+    f.close() 
 
-        print("alerta en: "+canal_salida)
-        shutil.copy(ruta_imagen,ruta_imagen_gui+"/fotograma.png")
-        channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes+";con")
-    else:
-        solo_nombre = os.path.basename(ruta_imagen)
-        ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
-        
-        ruta_full_boxes=ruta_boxes+"/"+solo_nombre+".txt"
-        shutil.copy(ruta_imagen,ruta_imagen_gui+"/fotograma.png")
-        channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes+";sin")
+    print("alerta en: "+canal_salida)
+    shutil.copy(ruta_imagen,ruta_imagen_gui+"/fotograma.png")
+    channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes)
         
 # Callback for handling messages
 def callback(ch, method, properties, body):
