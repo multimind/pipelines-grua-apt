@@ -101,11 +101,9 @@ def inferir_imagen(ruta_imagen, model):
         y1=box[1]
         x2=box[2]
         y2=box[3]
-
         
-    string_deteccion = str(clase)+','+str(int(x1))+","+str(int(y1))+","+str(int(x2))+","+str(int(y2))+","+str(confidence)+","+str(parte_entera)+","+str(parte_fraccional)
-
-    detecciones.append(string_deteccion)
+        string_deteccion = str(clase)+','+str(int(x1))+","+str(int(y1))+","+str(int(x2))+","+str(int(y2))+","+str(confidence)+","+str(parte_entera)+","+str(parte_fraccional)
+        detecciones.append(string_deteccion)
    
     solo_nombre = os.path.basename(ruta_imagen)
     ruta_full_pintada=ruta_pintadas+"/"+solo_nombre
