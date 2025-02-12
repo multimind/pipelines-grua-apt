@@ -81,49 +81,49 @@ def callback(ch, method, properties, body):
     global estado
     global primer_grupo
 
-    print(f"Received: {body.decode()}")
+    print(f"Recibiendo!!!!!!!: {body.decode()}")
 
-    url_box=body.decode()
-    ch.basic_ack(delivery_tag=method.delivery_tag)
+    # url_box=body.decode()
+    # ch.basic_ack(delivery_tag=method.delivery_tag)
     
-    print(url_box)
+    # print(url_box)
     
-    partes=url_box.split(";")
+    # partes=url_box.split(";")
 
-    ruta_imagen=partes[0].replace(".txt","").replace("boxes","frames")
+    # ruta_imagen=partes[0].replace(".txt","").replace("boxes","frames")
 
-    if estado=="SIN_TRABAJADOR":
+    # if estado=="SIN_TRABAJADOR":
 
-        if partes[1]=="sin":
-            print("borrando: "+ruta_imagen)
-            if os.path.isfile(partes[0]):
-                os.remove(partes[0])
-            else:
-                print("no se puede borrar"+partes[0])
+    #     if partes[1]=="sin":
+    #         print("borrando: "+ruta_imagen)
+    #         if os.path.isfile(partes[0]):
+    #             os.remove(partes[0])
+    #         else:
+    #             print("no se puede borrar"+partes[0])
 
-            if os.path.isfile(ruta_imagen):
-                os.remove(ruta_imagen)
-            else:
-                print("no se puede borrar"+ruta_imagen)
+    #         if os.path.isfile(ruta_imagen):
+    #             os.remove(ruta_imagen)
+    #         else:
+    #             print("no se puede borrar"+ruta_imagen)
 
 
-        elif partes[1]=="con":
+    #     elif partes[1]=="con":
 
-            estado="CON_TRABAJADOR"
-            enviar_alerta(ruta_imagen)
-    else:
+    #         estado="CON_TRABAJADOR"
+    #         enviar_alerta(ruta_imagen)
+    # else:
 
-        if partes[1]=="sin":
-            estado="SIN_TRABAJADOR"
+    #     if partes[1]=="sin":
+    #         estado="SIN_TRABAJADOR"
 
-            if os.path.isfile(partes[0]):
-                os.remove(partes[0])
+    #         if os.path.isfile(partes[0]):
+    #             os.remove(partes[0])
 
-            if os.path.isfile(ruta_imagen):
-                os.remove(ruta_imagen)
+    #         if os.path.isfile(ruta_imagen):
+    #             os.remove(ruta_imagen)
 
-        elif partes[1]=="con":
-            pass
+    #     elif partes[1]=="con":
+    #         pass
 
 def procesar(config):
     global model
