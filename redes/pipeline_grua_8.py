@@ -61,7 +61,7 @@ def draw_boxes(image_path, detections, output_path):
         logging.info(f"saved image with boxes to {output_path}")
     except Exception as e:
         logging.error(f"error saving image {output_path}: {e}")
-
+#
 def callback(ch, method, properties, body):
     try:
         data = pickle.loads(body)
