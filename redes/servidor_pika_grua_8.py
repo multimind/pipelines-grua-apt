@@ -119,7 +119,7 @@ def inferir_imagen(ruta_imagen, model):
     f.close() 
 
     print("alerta en: "+canal_salida)
-    shutil.copy(ruta_imagen,ruta_imagen_gui+"/fotograma.png")
+    #shutil.copy(ruta_imagen,ruta_imagen_gui+"/fotograma.png")
     channel.basic_publish(exchange='', routing_key=canal_salida, body=ruta_full_boxes)
         
 # Callback for handling messages
