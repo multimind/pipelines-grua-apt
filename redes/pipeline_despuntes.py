@@ -556,7 +556,6 @@ def procesar(config):
 
     id_servidor=int(config["MONITOREO"]["id_servidor"])
     id_servicio=int(config["MONITOREO"]["id_servicio"])
-    url_monitoreo=config["MONITOREO"]["url_monitoreo"]
     
     mensaje= {
             "id_servidor": id_servidor,
