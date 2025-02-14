@@ -12,6 +12,7 @@ from PIL import Image,ImageDraw
 import datetime
 import math
 import requests
+from notificar_monitoreo import NotificadorMonitoreo
  
 nombre_canal=None
 
@@ -31,6 +32,8 @@ estado="SIN_DESPUNTES"
 
 primer_grupo=None
 segundo_grupo=None
+
+notificador_monitoreo=None
 
 def reconstruct_timestamp(integer_part, fractional_part):
     timestamp = float(integer_part) + int(fractional_part) / 1_000_000
@@ -433,6 +436,9 @@ def callback(ch, method, properties, body):
     global ruta_frames
     global estado
     global primer_grupo
+    global notificador_monitoreo
+
+    notificador_monitoreo.notificar_monitoreo_rabbit()
 
     print(f"Received: {body.decode()}")
 
@@ -518,7 +524,10 @@ def callback(ch, method, properties, body):
                     borrar_imagen(url_box)
 
     print("--------- estado final: "+estado+" --------------")
-           
+
+    #enviar reporte cada x tiempo 
+    #curl -X POST -H "Content-Type: application/json" -d ' {"id_servidor": 4, "id_servicio": 37, "estado":  1}' http://142.93.253.160/crear/reporte-servicio
+
 def procesar(config):
     global model
     global nombre_canal
@@ -532,6 +541,7 @@ def procesar(config):
 
     global url_telegram
     global canal_id
+    global notificador_monitoreo
 
     nombre_canal=config["PROCESAMIENTO"]["nombre_canal"]
 
@@ -543,6 +553,18 @@ def procesar(config):
    
     url_telegram=config["TELEGRAM"]["url_telegram"]
     canal_id=config["TELEGRAM"]["canal_id"]
+
+    id_servidor=int(config["MONITOREO"]["id_servidor"])
+    id_servicio=int(config["MONITOREO"]["id_servicio"])
+    url_monitoreo=config["MONITOREO"]["url_monitoreo]
+    
+    mensaje= {
+            "id_servidor": id_servidor,
+            "id_servicio": id_servicio,
+            "estado": 1,
+    }
+
+    notificador_monitoreo=NotificadorMonitoreo(4*60,mensaje)
     
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
