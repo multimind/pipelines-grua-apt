@@ -7,7 +7,7 @@ QUEUE_NAME = 'reportar_monitoreo'
 
 class NotificadorMonitoreo:
     def __init__(self,segundos_entre_llamadas,mensaje):
-        self.delta_envio=delta_envio
+        self.segundos_entre_llamadas=segundos_entre_llamadas
         self.tiempo_anterior=time.time()
         self.mensaje=mensaje
 
