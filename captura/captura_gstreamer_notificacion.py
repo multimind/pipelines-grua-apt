@@ -148,6 +148,7 @@ def main(config):
         "id_servidor": id_servidor,
         "id_servicio": id_servicio,
         "estado": 1,
+        "mensaje": nombre_sink_gstreamer +" "+ nombre_canal
     }
 
     notificador_monitoreo=NotificadorMonitoreo(4*60,mensaje)
