@@ -188,7 +188,7 @@ def main(config):
     except KeyboardInterrupt:
         print("Stopping...")
     finally:
-        print("Finalizando loop principal)
+        print("Finalizando loop principal")
         loop.quit()
         pipeline.set_state(Gst.State.NULL)
     print("Fin de pipeline")
