@@ -11,7 +11,7 @@ class NotificadorMonitoreo:
         self.tiempo_anterior=time.time()
         self.mensaje=mensaje
 
-    def notificar_monitoreo_rabbit():
+    def notificar_monitoreo_rabbit(self):
 
         tiempo_actual=time.time()
 
