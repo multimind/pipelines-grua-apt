@@ -151,7 +151,7 @@ def main(config):
         "mensaje": nombre_sink_gstreamer +" "+ nombre_canal
     }
 
-    notificador_monitoreo=NotificadorMonitoreo(4*60,mensaje)
+    notificador_monitoreo=NotificadorMonitoreo(10*60,mensaje)
 
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
