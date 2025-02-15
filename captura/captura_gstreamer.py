@@ -13,7 +13,7 @@ from datetime import datetime
 import os
 import pika 
 from systemd.daemon import notify
-import argparse
+import argparse 
 import configparser
 
 STATUS_FILE = None
@@ -51,10 +51,8 @@ def on_new_sample(sink,user_data):
     success, map_info = buffer.map(Gst.MapFlags.READ)
     if not success:
         print("==fin mapeo")
-    
         return Gst.FlowReturn.ERROR
-    print("a0")
-
+    
     # Convert the raw data into an image
     try:
        
@@ -102,14 +100,9 @@ def on_new_sample(sink,user_data):
 
         nombre_final=ruta_frames+"/"+nombre_captura+".jpg"
 
-        print("nombre_final")
-        print(nombre_final)
-
         image.save(nombre_final)
 
-        print("antes de publicar!!!")
         channel.basic_publish(exchange='', routing_key=nombre_canal, body=nombre_final)
-        print("publicado!")
     
     except pika.exceptions.UnroutableError as e:
         print(f"Message could not be routed: {e}")
@@ -125,11 +118,7 @@ def on_new_sample(sink,user_data):
     with open(STATUS_FILE, "w") as f:
         f.write(str(time.time()))
     
-    print("escribiendo!")
-
     notify("WATCHDOG=1")
-    
-    print("fin escribiendo watchdog")
 
     return Gst.FlowReturn.OK
 
@@ -179,15 +168,14 @@ def main(config):
   
     try:
         loop.run()
-        print("salgo????????????")
+        print("despues de run ")
     except KeyboardInterrupt:
         print("Stopping...")
     finally:
-        # Clean up
-        print("EL CODIGO SE TERMINA POR ALGUN MOTIVO!!!!!")
+        print("Finalizando loop principal)
         loop.quit()
         pipeline.set_state(Gst.State.NULL)
-    print("SALIENDO!!!!")
+    print("Fin de pipeline")
         
 if __name__ == "__main__":
 
